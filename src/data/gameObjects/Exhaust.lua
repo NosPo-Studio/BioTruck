@@ -12,7 +12,7 @@ function ParticleTestContainer.new(args)
 	args = args or {}
 	--args.particle = "TestParticle2"
 	args.type = 1
-	args.useCollision = true
+	args.useCollision = false
 	args.updateAlways = true
 	
 	--===== default stuff =====--
@@ -53,8 +53,6 @@ function ParticleTestContainer.new(args)
 		for c = 1, toSpawn do
 			--global.log(this.particle, x + this.parent.exhaustOffsetX, y + this.parent.exhaustOffsetY)
 			local rx, ry = math.random(this.width) -1, math.random(this.height) -1
-			
-			global.log(rx)
 			
 			local particle = this:addParticle(this.particle, x + this.parent.exhaustOffsetX + rx, y + this.parent.exhaustOffsetY + ry)
 			

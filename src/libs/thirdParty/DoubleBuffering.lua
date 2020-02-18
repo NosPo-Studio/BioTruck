@@ -30,6 +30,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
+local version = "v0.2" --NosGa changed version.
 
 local component = require("component")
 local unicode = require("unicode")
@@ -206,7 +207,7 @@ end
 local function copy(x, y, width, height, raw)
 	local copyArray, index = { width, height }
 	local rawCopyArray = { width, height }
-
+	
 	for j = y, y + height - 1 do
 		for i = x, x + width - 1 do
 			if i >= 1 and j >= 1 and i <= bufferWidth and j <= bufferHeight then
@@ -231,14 +232,94 @@ local function copy(x, y, width, height, raw)
 			end
 		end
 	end
-
+	
 	return copyArray, rawCopyArray
+end
+
+local function directCopy(x, y, width, height, tx, ty, raw)
+	local copyArray, index = { width, height }
+	local rawCopyArray = { width, height }
+	
+	local imageWidth = width
+	local bufferIndex, pictureIndex, bufferIndexStepOnReachOfImageWidth = bufferWidth * (ty - 1) + tx, 3, bufferWidth - imageWidth
+	
+	local function add(entry, x, y)
+		
+		
+		--[[
+		for y = ty, ty + picture[2] - 1 do
+		if y >= drawLimitY1 and y <= drawLimitY2 then
+			for x = tx, tx + imageWidth - 1 do
+				if x >= drawLimitX1 and x <= drawLimitX2 then
+					newFrameBackgrounds[bufferIndex] = picture[pictureIndex]
+					newFrameForegrounds[bufferIndex] = picture[pictureIndex + 1]
+					newFrameSymbols[bufferIndex] = picture[pictureIndex + 2]
+					if rawPicture ~= nil then
+						currentFrameBackgrounds[bufferIndex] = rawPicture[pictureIndex]
+						currentFrameForegrounds[bufferIndex] = rawPicture[pictureIndex + 1]
+						currentFrameSymbols[bufferIndex] = rawPicture[pictureIndex + 2]
+					end
+				end
+
+				bufferIndex, pictureIndex = bufferIndex + 1, pictureIndex + 3
+			end
+
+			bufferIndex = bufferIndex + bufferIndexStepOnReachOfImageWidth
+		else
+			bufferIndex, pictureIndex = bufferIndex + bufferWidth, pictureIndex + imageWidth * 3
+		end
+		]]
+	end
+	
+	--2081
+	
+	for j = y, y + height - 1 do
+		for i = x, x + width - 1 do
+			local newX, newY = bufferIndex % bufferWidth, math.floor(bufferIndex / bufferWidth) +1
+			if i >= 1 and j >= 1 and i <= bufferWidth and j <= bufferHeight then
+				index = bufferWidth * (j - 1) + i
+				
+				--GPUProxy.setForeground(0xaaaaaa)
+				--print(index, newIndex, bufferIndex)
+				
+				
+				if newY >= drawLimitY1 and newY <= drawLimitY2 and newX >= drawLimitX1 and newX <= drawLimitX2 then
+					newFrameBackgrounds[bufferIndex] = newFrameBackgrounds[index]
+					newFrameForegrounds[bufferIndex] = newFrameForegrounds[index]
+					newFrameSymbols[bufferIndex] = newFrameSymbols[index]
+					
+					if raw then
+						currentFrameBackgrounds[bufferIndex] = newFrameBackgrounds[index]
+						currentFrameForegrounds[bufferIndex] = newFrameForegrounds[index]
+						currentFrameSymbols[bufferIndex] = newFrameSymbols[index]
+					end
+				end
+				
+			else
+				if newY >= drawLimitY1 and newY <= drawLimitY2 and newX >= drawLimitX1 and newX <= drawLimitX2 then
+					newFrameBackgrounds[newIndex] = 0x0
+					newFrameForegrounds[newIndex] = 0x0
+					newFrameSymbols[newIndex] = " "
+					
+					if raw then
+						currentFrameBackgrounds[bufferIndex] = 0x0
+						currentFrameForegrounds[bufferIndex] = 0x0
+						currentFrameSymbols[bufferIndex] = " "
+					end
+				end
+			end
+			bufferIndex, pictureIndex = bufferIndex + 1, pictureIndex + 3
+		end
+		bufferIndex = bufferIndex + bufferIndexStepOnReachOfImageWidth
+	end
+	
+	--return copyArray, rawCopyArray
 end
 
 local function paste(startX, startY, picture, rawPicture)
 	local imageWidth = picture[1]
 	local bufferIndex, pictureIndex, bufferIndexStepOnReachOfImageWidth = bufferWidth * (startY - 1) + startX, 3, bufferWidth - imageWidth
-
+	
 	for y = startY, startY + picture[2] - 1 do
 		if y >= drawLimitY1 and y <= drawLimitY2 then
 			for x = startX, startX + imageWidth - 1 do
@@ -678,6 +759,7 @@ return {
 	clear = clear,
 	copy = copy,
 	paste = paste,
+	directCopy = directCopy,
 	rawCopy = rawCopy,
 	rawPaste = rawPaste,
 	rasterizeLine = rasterizeLine,

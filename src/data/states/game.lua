@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.1"
+global.gameVersion = "v0.0.1d"
 
 --===== shared vars =====--
 local game = {
@@ -54,7 +54,16 @@ function game.init()
 	print("[game]: Start init.")
 	
 	--===== debug =====--
+	--[[
+	package.loaded["libs/ocgf"] = nil
+	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
+	]]
 	
+	--package.loaded["libs/thirdParty/DoubleBuffering"] = nil
+	--global.db = require("libs/thirdParty/DoubleBuffering")
+	
+	package.loaded["libs/dbgpu_api"] = nil
+	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true})
 	--===== debug end =====--
 	
 	global.load({
@@ -114,7 +123,7 @@ function game.start()
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 	})
 	game.goTest2 = game.ra1:addGO("Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
-	game.goTest3 = game.ra1:addGO("Test4", {posX = 35, posY = 12, layer = 2, name = "goTest3",
+	game.goTest3 = game.ra1:addGO("Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 	})
 	
@@ -180,6 +189,8 @@ function game.draw()
 	global.gpu.set(global.resX / 2 - 10, 6, "Max distance: " .. tostring(game.maxDistance))
 	
 	game.ocui:draw()
+	
+	global.drawDebug("BiofuleMachine: " .. global.gameVersion)
 end
 
 function game.key_down(s)

@@ -152,6 +152,7 @@ local function moveFrame(renderArea)
 			cmi.clear[1],
 			cmi.clear[2],
 		}), nil, {renderArea.posX, renderArea.posX + renderArea.sizeX -1, renderArea.posY, renderArea.posY + renderArea.sizeY -1})
+		
 	end
 end
 
@@ -229,10 +230,10 @@ function re.draw()
 	for i, ra in pairs(global.renderAreas) do
 		if ra.visible then
 			moveFrame(ra)
-			moveArea(ra)
+			--moveArea(ra)
 			clearFrame(ra, ra.toClear)
 			clearFrame(ra)
-			drawFrame(ra)
+			--drawFrame(ra)
 			ra:ngeDraw()
 			ra:resetCMI()
 		end

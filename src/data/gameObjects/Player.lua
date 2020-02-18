@@ -37,13 +37,14 @@ function Player.new(args)
 	this.startPosY = select(2, this:getPos())
 	this.line = args.line or 0
 	
-	this.driving = false
+	this.driving = true
+	this.maxSmoke = 10
 	
 	
 	--===== global functions =====--
 	this.ctrl_go_key_down = function(this)
 		this.driving = true
-		global.state.game.pcExhaust.smokeRate = 10 * global.conf.particles
+		global.state.game.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
 	end
 	this.ctrl_up_key_down = function(this)
 		local newLine = math.min(this.line +1, global.state.game.lines -1)
@@ -74,6 +75,10 @@ function Player.new(args)
 	this.update = function(this, dt, ra) --will called on every game tick.
 		local speed = this:getSpeed()
 		local force = this.stats.acceleration
+		
+		if global.state.game.pcExhaust.smokeRate > this.maxSmoke then
+			global.state.game.pcExhaust.smokeRate = math.max(global.state.game.pcExhaust.smokeRate - 5 *dt, this.maxSmoke)
+		end
 		
 		if this.driving then
 			this.fuel = math.max(this.fuel - this.stats.fuelConsumption * global.dt, 0)
