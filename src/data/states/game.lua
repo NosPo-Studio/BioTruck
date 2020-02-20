@@ -58,16 +58,15 @@ function game.init()
 	
 	--===== debug =====--
 	
-	package.loaded["libs/ocgf"] = nil
-	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
-	
-	
-	
 	package.loaded["libs/thirdParty/DoubleBuffering"] = nil
 	global.db = require("libs/thirdParty/DoubleBuffering")
 	
 	package.loaded["libs/dbgpu_api"] = nil
 	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true})
+	
+	package.loaded["libs/ocgf"] = nil
+	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
+	
 	--===== debug end =====--
 	
 	global.load({
@@ -101,12 +100,12 @@ function game.init()
 		posY = 13, 
 		layer = 4, 
 		name = "player", 
-		--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 		stats = game.stats,
 		eoy = -1,
 		eox = 2,
 	})
-	--[[
+	
 	game.pcExhaust = game.ra1:addGO("Exhaust", {
 		width = 2, 
 		height = 1, 
@@ -114,8 +113,8 @@ function game.init()
 		parent = game.goPlayer,
 		smokeRate = 2 * global.conf.particles,
 	})
-	]]
-	--game.pcDefaultParticleContainer = game.ra1:addGO("DefaultParticleContainer", {})
+	
+	game.pcDefaultParticleContainer = game.ra1:addGO("DefaultParticleContainer", {})
 	
 	print("[game]: init done.")
 end
@@ -127,8 +126,8 @@ function game.start()
 	--===== debug =====--
 	
 	game.goBarrierTest = game.ra1:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
-		--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
-		--defaultParticleContainer = game.pcDefaultParticleContainer,
+		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+		defaultParticleContainer = game.pcDefaultParticleContainer,
 	})
 	
 	--[[
@@ -150,7 +149,7 @@ function game.start()
 	local dis = 20
 	for c = 1, amount * dis, dis do
 		table.insert(game.testGOs, game.ra1:addGO("world/BarrierTest", {posX = 34 +c, posY = 12, layer = 3, name = "goBarrierTest",
-			--defaultParticleContainer = game.pcDefaultParticleContainer,
+			defaultParticleContainer = game.pcDefaultParticleContainer,
 		}))
 		
 	end
@@ -229,8 +228,6 @@ function game.draw()
 	game.ocui:draw()
 	
 	global.drawDebug("BiofuleMachine: " .. global.gameVersion)
-	
-	global.db.drawImage(15, 18, global.texture.pipipu)
 end
 
 function game.key_down(s)

@@ -101,10 +101,10 @@ function dbgpu.copy(x, y, sx, sy, tx, ty)
 	ty = math.floor(ty)
 	
 	if sx * sy > 3200 then
-		--buffer.directCopy(x, y, sx, sy, tx +x, ty +y, dbgpu.rawCopy)
+		buffer.directCopy(x, y, sx, sy, tx +x, ty +y, dbgpu.rawCopy)
 	else
-		--local data, rawData = buffer.copy(x, y, sx, sy, dbgpu.rawCopy)
-		--buffer.paste(tx +x, ty +y, data, rawData)
+		local data, rawData = buffer.copy(x, y, sx, sy, dbgpu.rawCopy)
+		buffer.paste(tx +x, ty +y, data, rawData)
 	end
 	
 	if dbgpu.rawCopy then		

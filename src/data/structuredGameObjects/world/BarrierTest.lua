@@ -37,7 +37,7 @@ function GameObjectsTemplate.new(args)
 	args.sizeX = 6
 	args.sizeY = 6
 	args.components = { --Define the GameObjects components.
-		--[[
+		
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
@@ -45,12 +45,12 @@ function GameObjectsTemplate.new(args)
 			texture = "test",
 			--texture = "exampleTexture",
 		},
-		]]
+		
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
-			--texture = "grass",
-			texture = "pipipu",
+			texture = "grass",
+			--texture = "pipipu",
 		},
 		{"BoxCollider",
 			sx = args.sizeX,

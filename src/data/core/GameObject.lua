@@ -279,7 +279,6 @@ function GameObject.new(args)
 		
 	end
 	this.ngeClear = function(this, renderArea) --parent func
-		--[[
 		local offsetX, offsetY = renderArea.posX + renderArea.cameraPosX, renderArea.posY + renderArea.cameraPosY
 		local lastPosX, lastPosY = this:getLastPos()
 		local posX, posY = this:getPos()
@@ -300,7 +299,6 @@ function GameObject.new(args)
 				global.oclrl:draw(0, 0, global.oclrl.generateTexture(posX + offsetX + ca.posX, posY + offsetY + ca.posY, ca.sizeX, ca.sizeY, " "), nil, {renderArea.posX, renderArea.posX + renderArea.sizeX -1, renderArea.posY, renderArea.posY + renderArea.sizeY -1})
 			end
 		end
-		]]
 	end
 	this.ngeSUpdate = function(this, gameObjects, dt, ra) --parent func
 		if this.ngeAttributes.isParent then
