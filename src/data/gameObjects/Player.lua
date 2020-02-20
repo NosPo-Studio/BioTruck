@@ -16,6 +16,7 @@ function Player.new(args)
 		{"Sprite", texture = global.texture.player.right},
 		--{"Sprite", texture = "grass"},
 		{"RigidBody", g = 0, stiffness = 3},
+		--{"BoxCollider", sx = args.sizeX, sy = args.sizeY},
 	}
 	
 	--===== default stuff =====--
@@ -36,12 +37,29 @@ function Player.new(args)
 	
 	this.startPosY = select(2, this:getPos())
 	this.line = args.line or 0
+	this.momentum = 0
 	
 	this.driving = true
 	this.maxSmoke = 10
 	
+	this.gameObject:addBoxCollider({sx = args.sizeX, sy = args.sizeY, lf = function(_, gameObject)
+		local barrier = gameObject.gameObject.parent
+		local speedX = this:getSpeed()
+		local damage = speedX * this.stats.damage
+		local backDamage, speedLoss, fuel = barrier:collide(damage)
+		
+		this.fuel = math.min(this.fuel + fuel, this.stats.fuelTank)
+		
+		this.life = this.life - math.max(math.floor(speedX) * backDamage / math.max(this.armor, 1), 0)
+		this.armor = this.armor - math.floor(speedX) * backDamage
+		
+		this.momentum = this.momentum + speedX * (1 - math.min(speedLoss, 1))
+	end})
+	
 	
 	--===== global functions =====--
+	
+	
 	this.ctrl_go_key_down = function(this)
 		this.driving = true
 		global.state.game.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
@@ -50,7 +68,6 @@ function Player.new(args)
 		local newLine = math.min(this.line +1, global.state.game.lines -1)
 		
 		if newLine ~= this.line then
-			this:move(0, global.state.game.streetWidth)
 			this.line = newLine
 		end
 	end
@@ -58,7 +75,6 @@ function Player.new(args)
 		local newLine = math.max(this.line -1, 0)
 		
 		if newLine ~= this.line then
-			this:move(0, -global.state.game.streetWidth)
 			this.line = newLine
 		end
 	end
@@ -73,11 +89,27 @@ function Player.new(args)
 	end
 	
 	this.update = function(this, dt, ra) --will called on every game tick.
-		local speed = this:getSpeed()
+		local game = global.state.game
+		local streetWidth = game.streetWidth
 		local force = this.stats.acceleration
+		local posX, posY = this:getPos()
+		local speedX, speedY = this:getSpeed()
+		local targetY = this.line * streetWidth
+		local relativePosY = this.startPosY - posY
 		
-		if global.state.game.pcExhaust.smokeRate > this.maxSmoke then
-			global.state.game.pcExhaust.smokeRate = math.max(global.state.game.pcExhaust.smokeRate - 5 *dt, this.maxSmoke)
+		this:addSpeed(this.momentum, 0)
+		this.momentum = 0
+		
+		
+		if speedY >= -1 and relativePosY < targetY or relativePosY < targetY - streetWidth /2 then
+			this:addForce(0, -this.stats.traction *dt, this.stats.traction)
+		elseif speedY <= 1 and relativePosY > targetY or relativePosY > targetY + streetWidth /2 then
+			this:addForce(0, this.stats.traction *dt, this.stats.traction)
+		end
+		
+		
+		if game.pcExhaust.smokeRate > this.maxSmoke then
+			game.pcExhaust.smokeRate = math.max(game.pcExhaust.smokeRate - 5 *dt, this.maxSmoke)
 		end
 		
 		if this.driving then
@@ -86,11 +118,15 @@ function Player.new(args)
 			if this.fuel > 0 then
 				this:addForce(force *10 * global.dt, 0, this.stats.maxSpeed)
 			else
-				global.state.game.pcExhaust.smokeRate = 0
+				game.pcExhaust.smokeRate = 0
 			end	
 		end
 		
 		this.gameObject:playAnimation(select(1, this:getSpeed() /2))
+		
+		--x = x + game.cameraOffsetX
+		--y = game.cameraOffsetY
+		game.ra1:moveCameraTo(posX + game.cameraOffsetX, game.cameraOffsetY)
 	end
 	
 	this.draw = function(this) --will called every time the gameObject will drawed.

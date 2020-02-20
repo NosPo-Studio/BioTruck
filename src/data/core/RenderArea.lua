@@ -91,7 +91,14 @@ function RenderArea.new(args)
 	
 	--===== default functions =====--
 	this.addGO = function(this, go, args)
-		if global.gameObject[go] == nil then
+		local path, goClass = global.ut.seperatePath(go)
+		local gameObject = global.gameObject
+		
+		for s in string.gmatch(tostring(path), "[^/]+") do
+			gameObject = gameObject[s]
+		end
+		
+		if gameObject[goClass] == nil then
 			print("[RA/" .. tostring(this.name) .. "]: Failed to add gameObject: \"" .. go .. "\" (not found).")
 		else
 			if this.parent ~= nil then
@@ -101,7 +108,7 @@ function RenderArea.new(args)
 				
 				print("[RA/" .. tostring(this.name) .. "]: Adding gameObject: \"" .. go .. "\" (#" .. tostring(id) .. ").")
 				
-				this.gameObjects[id] = global.gameObject[go].new(args)
+				this.gameObjects[id] = gameObject[goClass].new(args)
 				this.gameObjects[id].ngeAttributes.id = id
 				
 				this.gameObjects[id].ngeAttributes.responsibleRenderAreas[this] = true

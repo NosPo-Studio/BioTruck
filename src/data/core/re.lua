@@ -104,12 +104,14 @@ local function checkOverlapping(renderArea, gameObject, layer)
 						lastPosY + sy > lastPosY2 and
 						lastPosY < lastPosY2 + sy2 
 					then
-						renderArea.gameObjectAttributes[go.ngeAttributes.id].mustBeRendered = true
-						renderArea.gameObjectAttributes[go.ngeAttributes.id].causedByOverlap = true
-						renderArea.toRender[l][go] = renderArea
-						checkOverlapping(renderArea, go, l)
-						
-						print("[RE]: Found overlap with: " .. gameObject.ngeAttributes.name .. ": N:" .. go.ngeAttributes.name .. ", L:" .. tostring(l) .. ", X:" .. tostring(x) .. ", Y:" .. tostring(y) .. ", ID:"..  tostring(go.ngeAttributes.id) .. ", F:" .. tostring(global.currentFrame) .. ".")
+						if renderArea.gameObjectAttributes[go.ngeAttributes.id] ~= nil then
+							renderArea.gameObjectAttributes[go.ngeAttributes.id].mustBeRendered = true
+							renderArea.gameObjectAttributes[go.ngeAttributes.id].causedByOverlap = true
+							renderArea.toRender[l][go] = renderArea
+							checkOverlapping(renderArea, go, l)
+							
+							print("[RE]: Found overlap with: " .. gameObject.ngeAttributes.name .. ": N:" .. go.ngeAttributes.name .. ", L:" .. tostring(l) .. ", X:" .. tostring(x) .. ", Y:" .. tostring(y) .. ", ID:"..  tostring(go.ngeAttributes.id) .. ", F:" .. tostring(global.currentFrame) .. ".")
+						end
 					end
 				end
 			end
@@ -230,10 +232,10 @@ function re.draw()
 	for i, ra in pairs(global.renderAreas) do
 		if ra.visible then
 			moveFrame(ra)
-			--moveArea(ra)
+			moveArea(ra)
 			clearFrame(ra, ra.toClear)
 			clearFrame(ra)
-			--drawFrame(ra)
+			drawFrame(ra)
 			ra:ngeDraw()
 			ra:resetCMI()
 		end

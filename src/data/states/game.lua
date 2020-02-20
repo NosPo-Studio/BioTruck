@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.1d"
+global.gameVersion = "v0.0.2"
 
 --===== shared vars =====--
 local game = {
@@ -26,12 +26,13 @@ local game = {
 		maxSpeed = 10,
 		acceleration = 1,
 		brake = 1,
-		traction = 1,
-		fuelTank = 30,
-		startFuel = 10,
+		traction = 10,
+		fuelTank = 100,
+		startFuel = 5,
 		fuelConsumption = 1,
 		armor = 10,
 		life = 10,
+		damage = 1,
 	},
 	cameraOffsetX = -3,
 	cameraOffsetY = 0,
@@ -70,6 +71,7 @@ function game.init()
 		toLoad = {
 			parents = true,
 			gameObjects = true,
+			structuredGameObjects = true,
 			textures = true,
 			animations = true,
 		},
@@ -77,10 +79,10 @@ function game.init()
 	
 	game.ocui = global.ocui.initiate(global.oclrl)
 	game.ui.speed = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.armor = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	
 	game.ui.fuel = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	game.ui.armor = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	
 	game.ra1 = global.addRA({
 		posX = 1, 
@@ -93,7 +95,7 @@ function game.init()
 	
 	game.goPlayer = game.ra1:addGO("Player", {
 		posX = 10, 
-		posY = 10, 
+		posY = 13, 
 		layer = 4, 
 		name = "player", 
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
@@ -119,29 +121,38 @@ function game.start()
 	
 	--===== debug =====--
 	
-	game.goTest = game.ra1:addGO("Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
+	game.goBarrierTest = game.ra1:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 	})
-	game.goTest2 = game.ra1:addGO("Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
-	game.goTest3 = game.ra1:addGO("Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
+	
+	--[[
+	game.goTest = game.ra1:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
+		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	})
+	
+	game.goTest = game.ra1:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
+		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	})
+	game.goTest2 = game.ra1:addGO("world/Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
+	game.goTest3 = game.ra1:addGO("world/Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 	})
 	
 	game.testGOs = {}
 	local amount = 10
 	local dis = 20
-	for c = 0, amount * dis, dis do
-		table.insert(game.testGOs, game.ra1:addGO("Test4", 
+	for c = 1, amount * dis, dis do
+		table.insert(game.testGOs, game.ra1:addGO("world/Test4", 
 			{posX = 45 +c, posY = 12, layer = 2, name = "goTest3",
 			--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 		}))
 		
-		table.insert(game.testGOs, game.ra1:addGO("Test4", 
+		table.insert(game.testGOs, game.ra1:addGO("world/Test4", 
 			{posX = 40 +c, posY = 3, layer = 2, name = "goTest3",
 			--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 		}))
 	end
-	
+	]]
 	--===== debug end =====--
 	
 end
@@ -149,10 +160,6 @@ end
 function game.update()	
 	local x, y = game.goPlayer:getPos()
 	local speed = select(1, game.goPlayer:getSpeed())
-	
-	x = x + game.cameraOffsetX
-	y = game.cameraOffsetY
-	game.ra1:moveCameraTo(x, y)
 	
 	game.ui.speed:setStatus(math.abs(speed) / game.stats.maxSpeed / 1.5)
 	game.ui.fuel:setStatus(game.goPlayer.fuel / game.stats.fuelTank)

@@ -126,15 +126,16 @@ function GameObject.new(args)
 	end
 	this.addSpeed = function(this, x, y, maxSpeed) --ToDo / WIP: untested. Outsource to ocgf.
 		local x2, y2 = this:getSpeed()
+		maxSpeed = maxSpeed or math.huge
 		if x > 0 then
-			x = math.max(x + x2, maxSpeed)
+			x = math.min(x + x2, maxSpeed)
 		else
-			x = math.min(x + x2, -maxSpeed)
+			x = math.max(x + x2, -maxSpeed)
 		end
 		if y > 0 then
-			y = math.max(y + y2, maxSpeed)
+			y = math.min(y + y2, maxSpeed)
 		else
-			y = math.min(y + y2, -maxSpeed)
+			y = math.max(y + y2, -maxSpeed)
 		end
 		this.gameObject:setSpeed(x, -y)
 	end
