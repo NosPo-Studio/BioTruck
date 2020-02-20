@@ -12,7 +12,8 @@ function ParticleTestContainer.new(args)
 	args = args or {}
 	--args.particle = "TestParticle2"
 	args.type = 1
-	args.useCollision = true
+	args.useCollision = false
+	args.updateAlways = true
 	
 	--===== default stuff =====--
 	local this = global.parent.ParticleContainer.new(args)

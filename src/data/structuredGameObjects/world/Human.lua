@@ -33,56 +33,56 @@ function GameObjectsTemplate.new(args)
 	--===== gameObject definition =====--
 	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
-	args.isParent = true
+	
+	args.sizeX = 6
+	args.sizeY = 6
+	args.components = { --Define the GameObjects components.
+		{"Sprite", 
+			x = 0, 
+			y = 0, 
+			texture = global.texture.player.left,
+		},
+		{"BoxCollider",
+			sx = args.sizeX,
+			sy = args.sizeY,
+		},
+	}
+	args.stats = {
+		life = 5,
+		hardness = .1,
+		fuel = 5,
+	}
 	
 	--===== default stuff =====--
-	local this = global.core.GameObject.new(args) 
+	local this = global.parent.Barrier.new(args) 
 	this = setmetatable(this, GameObjectsTemplate) 
 	
 	--===== init =====--
-	this.particleContainer = args.particleContainer
-	this.defaultParticleContainer = args.defaultParticleContainer
-	
-	this.stats = args.stats
-	this.life = args.stats.life
-	
 	
 	--===== custom functions =====--
-	this.collide = function(this, damage, speedX)
-		local fuel = 0
-		local backDamage = damage - math.max(damage - this.life, 0)
-		backDamage = backDamage / damage
+	this.explode = function(this, speed)
 		
-		this.life = this.life - damage
-		
-		if this.life <= 0 then
-			fuel = this.stats.fuel
-			this:explode(speedX)
-			this:destroy()
-		end
-		
-		return backDamage * this.stats.hardness, backDamage, fuel
 	end
 	
 	--===== default functions =====--
-	this.pStart = function(this) 
-		global.run(this.start, this)
+	this.start = function(this) 
+		
 	end
 	
-	this.pUpdate = function(this, dt, ra) 
-		global.run(this.update, this, dt, ra)
+	this.update = function(this, dt, ra) 
+		
 	end
 	
-	this.pDraw = function(this, ra) 
-		global.run(this.draw, this, ra)
+	this.draw = function(this) 
+	
 	end
 	
-	this.pClear = function(this, acctual) 
-		global.run(this.clear, this, acctual)
+	this.clear = function(this, acctual) 
+		
 	end
 	
-	this.pStop = function(this) 
-		global.run(this.stop, this)
+	this.stop = function(this) 
+		
 	end
 	
 	return this

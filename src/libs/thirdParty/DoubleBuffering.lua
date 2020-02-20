@@ -30,7 +30,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
-local version = "v0.2d" --NosPo changes version.
+local version = "v0.3t" --NosPo changes version.
 
 local component = require("component")
 local unicode = require("unicode")
@@ -314,9 +314,19 @@ end
 
 local function directCopy(x, y, width, height, tx, ty, current)
 	local index
-	
+	--cprint(x, y, width, height, tx, ty, current)
+	--GPUProxy.setForeground(0xaaaaaa)
+	--print(x, y, width, height, tx, ty, current)
 	local imageWidth = width
 	local bufferIndex, pictureIndex, bufferIndexStepOnReachOfImageWidth = bufferWidth * (ty - 1) + tx, 3, bufferWidth - imageWidth
+	
+	
+	local newBackgrounds, newForegrounds, newSymbols = {table.unpack(newFrameBackgrounds)}, {table.unpack(newFrameForegrounds)}, {table.unpack(newFrameSymbols)}
+	
+	local currentBackgrounds, currentForegrounds, currentSymbols
+	if current then
+		currentBackgrounds, currentForegrounds, currentSymbols = {table.unpack(currentFrameBackgrounds)}, {table.unpack(currentFrameForegrounds)}, {table.unpack(currentFrameSymbols)}
+	end
 	
 	for j = y, y + height - 1 do
 		for i = x, x + width - 1 do
@@ -325,33 +335,41 @@ local function directCopy(x, y, width, height, tx, ty, current)
 				index = bufferWidth * (j - 1) + i
 				
 				if newY >= drawLimitY1 and newY <= drawLimitY2 and newX >= drawLimitX1 and newX <= drawLimitX2 then
-					newFrameBackgrounds[bufferIndex] = newFrameBackgrounds[index]
-					newFrameForegrounds[bufferIndex] = newFrameForegrounds[index]
-					newFrameSymbols[bufferIndex] = newFrameSymbols[index]
+					newBackgrounds[bufferIndex] = newFrameBackgrounds[index]
+					newForegrounds[bufferIndex] = newFrameForegrounds[index]
+					newSymbols[bufferIndex] = newFrameSymbols[index]
 					
 					if current then
-						currentFrameBackgrounds[bufferIndex] = newFrameBackgrounds[index]
-						currentFrameForegrounds[bufferIndex] = newFrameForegrounds[index]
-						currentFrameSymbols[bufferIndex] = newFrameSymbols[index]
+						currentBackgrounds[bufferIndex] = currentFrameBackgrounds[index]
+						currentForegrounds[bufferIndex] = currentFrameForegrounds[index]
+						currentSymbols[bufferIndex] = currentFrameSymbols[index]
+						--[[
+						currentBackgrounds[bufferIndex] = newFrameBackgrounds[index]
+						currentForegrounds[bufferIndex] = newFrameForegrounds[index]
+						currentSymbols[bufferIndex] = newFrameSymbols[index]
+						]]
 					end
 				end
-				
 			else
 				if newY >= drawLimitY1 and newY <= drawLimitY2 and newX >= drawLimitX1 and newX <= drawLimitX2 then
-					newFrameBackgrounds[newIndex] = 0x0
-					newFrameForegrounds[newIndex] = 0x0
-					newFrameSymbols[newIndex] = " "
+					newBackgrounds[newIndex] = 0x0
+					newForegrounds[newIndex] = 0x0
+					newSymbols[newIndex] = " "
 					
 					if current then
-						currentFrameBackgrounds[bufferIndex] = 0x0
-						currentFrameForegrounds[bufferIndex] = 0x0
-						currentFrameSymbols[bufferIndex] = " "
+						currentBackgrounds[bufferIndex] = 0x0
+						currentForegrounds[bufferIndex] = 0x0
+						currentSymbols[bufferIndex] = " "
 					end
 				end
 			end
 			bufferIndex, pictureIndex = bufferIndex + 1, pictureIndex + 3
 		end
 		bufferIndex = bufferIndex + bufferIndexStepOnReachOfImageWidth
+	end
+	newFrameBackgrounds, newFrameForegrounds, newFrameSymbols = newBackgrounds, newForegrounds, newSymbols
+	if current then
+		currentFrameBackgrounds, currentFrameForegrounds, currentFrameSymbols = currentBackgrounds, currentForegrounds, currentSymbols
 	end
 end
 

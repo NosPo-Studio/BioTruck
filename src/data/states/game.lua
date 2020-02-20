@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.2"
+global.gameVersion = "v0.0.3"
 
 --===== shared vars =====--
 local game = {
@@ -27,8 +27,8 @@ local game = {
 		acceleration = 1,
 		brake = 1,
 		traction = 10,
-		fuelTank = 100,
-		startFuel = 5,
+		fuelTank = 20,
+		startFuel = 10,
 		fuelConsumption = 1,
 		armor = 10,
 		life = 10,
@@ -44,6 +44,8 @@ local game = {
 }
 
 --===== local vars =====--
+local t = false
+local c = 0
 
 --===== local functions =====--
 local function print(...)
@@ -60,8 +62,9 @@ function game.init()
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
 	]]
 	
-	--package.loaded["libs/thirdParty/DoubleBuffering"] = nil
-	--global.db = require("libs/thirdParty/DoubleBuffering")
+	
+	package.loaded["libs/thirdParty/DoubleBuffering"] = nil
+	global.db = require("libs/thirdParty/DoubleBuffering")
 	
 	package.loaded["libs/dbgpu_api"] = nil
 	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true})
@@ -112,6 +115,8 @@ function game.init()
 		smokeRate = 2 * global.conf.particles,
 	})
 	
+	game.pcDefaultParticleContainer = game.ra1:addGO("DefaultParticleContainer", {})
+	
 	print("[game]: init done.")
 end
 
@@ -123,6 +128,7 @@ function game.start()
 	
 	game.goBarrierTest = game.ra1:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+		defaultParticleContainer = game.pcDefaultParticleContainer,
 	})
 	
 	--[[
@@ -137,27 +143,52 @@ function game.start()
 	game.goTest3 = game.ra1:addGO("world/Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
 		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
 	})
+	]]
 	
 	game.testGOs = {}
 	local amount = 10
 	local dis = 20
 	for c = 1, amount * dis, dis do
-		table.insert(game.testGOs, game.ra1:addGO("world/Test4", 
-			{posX = 45 +c, posY = 12, layer = 2, name = "goTest3",
-			--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+		table.insert(game.testGOs, game.ra1:addGO("world/BarrierTest", {posX = 34 +c, posY = 12, layer = 3, name = "goBarrierTest",
+			defaultParticleContainer = game.pcDefaultParticleContainer,
 		}))
 		
-		table.insert(game.testGOs, game.ra1:addGO("world/Test4", 
-			{posX = 40 +c, posY = 3, layer = 2, name = "goTest3",
-			--particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
-		}))
 	end
-	]]
+	
+	
 	--===== debug end =====--
 	
 end
 
-function game.update()	
+function game.update(dt)	
+	if false then 
+		if c == 0 then
+			game.ra1:moveCameraTo(12, 0)
+			c = 1
+		elseif c == 1 then
+			--os.sleep(.5)
+			game.ra1:moveCameraTo(9, 0)
+			c = 2
+		end
+	end
+	
+	
+	if false then
+		if t then
+			game.ra1:moveCamera(1, 0)
+			c = c +1
+			if c > 10 then
+				t = false
+			end
+		else
+			game.ra1:moveCamera(-1, 0)
+			c = c -1
+			if c < 0 then
+				t = true
+			end
+		end
+	end
+	
 	local x, y = game.goPlayer:getPos()
 	local speed = select(1, game.goPlayer:getSpeed())
 	
@@ -203,6 +234,8 @@ end
 function game.key_down(s)
 	if s[4] == 28 and global.isDev then
 		print("--===== EINGABE =====--")
+		
+		c = 0
 		
 		if true then
 			global.realGPU.setBackground(0x000000)

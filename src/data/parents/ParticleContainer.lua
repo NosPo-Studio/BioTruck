@@ -65,10 +65,6 @@ function ParticleContainer.new(args)
 	args.sizeY = 1
 	args.solid = false
 	
-	args.components = {
-		{"Sprite", posX = 0, posY = 0, texture = global.oclrl.generateTexture({})},
-	}
-	
 	--===== default stuff =====--
 	local this = global.core.GameObject.new(args) 
 	this = setmetatable(this, ParticleContainer) 
@@ -200,6 +196,7 @@ function ParticleContainer.new(args)
 		
 		this.ngeAttributes.clearedAlready = true
 		--move(this, this.moveToX, this.moveToY, this.newSizeX, this.newSizeY)
+		
 	end
 	
 	this.pDraw = function(this, renderArea) 

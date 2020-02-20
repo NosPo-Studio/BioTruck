@@ -39,14 +39,14 @@ function Player.new(args)
 	this.line = args.line or 0
 	this.momentum = 0
 	
-	this.driving = true
+	this.driving = false
 	this.maxSmoke = 10
 	
 	this.gameObject:addBoxCollider({sx = args.sizeX, sy = args.sizeY, lf = function(_, gameObject)
 		local barrier = gameObject.gameObject.parent
 		local speedX = this:getSpeed()
 		local damage = speedX * this.stats.damage
-		local backDamage, speedLoss, fuel = barrier:collide(damage)
+		local backDamage, speedLoss, fuel = barrier:collide(damage, speedX)
 		
 		this.fuel = math.min(this.fuel + fuel, this.stats.fuelTank)
 		
@@ -124,8 +124,6 @@ function Player.new(args)
 		
 		this.gameObject:playAnimation(select(1, this:getSpeed() /2))
 		
-		--x = x + game.cameraOffsetX
-		--y = game.cameraOffsetY
 		game.ra1:moveCameraTo(posX + game.cameraOffsetX, game.cameraOffsetY)
 	end
 	

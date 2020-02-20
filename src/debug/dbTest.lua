@@ -19,18 +19,25 @@ db.drawRectangle(1, 1, 1000, 1000, 0x000000, 0x000000, " ")
 db.drawChanges()
 
 
-if true then
+if false then
 	dbgpu.setBackground(0x000000)
 	dbgpu.setForeground(0xaaaaaa)
 	dbgpu.set(10, 10, chars)
 	dbgpu.set(10, 12, chars)
 	dbgpu.set(10, 14, chars)
 end
+db.drawChanges()
 
 --local pd, rpd = db.copy(8, 8, 10, 10)
+
+db.set(1, 20, 0x333333, 0xaaaaaa, "T")
+db.drawRectangle(1, 23, 100, 100, 0x333333, 0xaaaaaa, "T")
+db.drawChanges()
 --db.paste(20, 10, pd)
 
---db.directCopy(8, 8, 10, 10, 20, 10)
+--db.directCopy(1, 15, 10, 10, 20, 15, false)
+--dbgpu.copy(1, 15, 10, 20, 4, 0)
+
 
 
 --[[
@@ -43,10 +50,10 @@ end
 local ptime = computer.uptime()
 
 for c = 0, 100 do
-	local cd, rcd = db.copy(5, 5, 100, 60, false)
-	db.paste(10, 10, cd, rdc)
+	--local cd, rcd = db.copy(5, 5, 52, 52, true)
+	--db.paste(10, 10, cd, rdc)
 	
-	--db.directCopy(5, 5, 100, 60, 10, 10, false)
+	db.directCopy(5, 5, 52, 52, 10, 10, true)
 end
 
 db.drawChanges()

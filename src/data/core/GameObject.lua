@@ -267,6 +267,7 @@ function GameObject.new(args)
 		
 		if this.ngeAttributes.drawSize then
 			local posX, posY = this:getPos()
+			
 			global.oclrl:draw(posX + offsetX, posY + offsetY, global.oclrl.generateTexture({
 				{"b", 0xFF69B4},
 				{0, 0, this.ngeAttributes.sizeX, 1, " "},

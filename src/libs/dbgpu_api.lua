@@ -25,7 +25,7 @@
     along with dbgpu_api.  If not, see <https://www.gnu.org/licenses/>.	
 ]]
 
-local version = "v0.1.3"
+local version = "v0.1.3t"
 
 local args = ...
 local path = args.path or ""
@@ -99,7 +99,14 @@ function dbgpu.copy(x, y, sx, sy, tx, ty)
 	y = math.floor(y)
 	tx = math.floor(tx)
 	ty = math.floor(ty)
-	buffer.directCopy(x, y, sx, sy, tx +x, ty +y, dbgpu.rawCopy)
+	
+	if sx * sy > 3000 then
+		buffer.directCopy(x, y, sx, sy, tx +x, ty +y, dbgpu.rawCopy)
+		--cprint("T")
+	else
+		local data, rawData = buffer.copy(x, y, sx, sy, dbgpu.rawCopy)
+		buffer.paste(tx +x, ty +y, data, rawData)
+	end
 	
 	if dbgpu.rawCopy then		
 		gpu.copy(x, y, sx, sy, tx, ty)

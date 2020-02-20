@@ -22,7 +22,7 @@ function Smoke.new(args)
 	--===== init =====--
 	local pa = global.ut.parseArgs
 	
-	this.rng = pa(args.rng, args.wind, 10)
+	this.rng = pa(args.rng, args.wind, 20)
 	
 	this.gameObject:addRigidBody({g = -pa(args.heat, 20), stiffness = 10})
 	this.gameObject:addBoxCollider({y = .5, sx = 1, sy = .5})

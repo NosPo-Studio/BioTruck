@@ -88,6 +88,7 @@ function Particle.new(args)
 				local x, y = this.gameObject:getPos()
 				x = math.floor(x +offsetX +.5)
 				y = math.floor((y +offsetY) *2 +.5)
+				--global.log(x, y)
 				global.db.semiPixelSet(x, y, this.color)
 			elseif type == 2 then
 				local x, y = this.gameObject:getPos()

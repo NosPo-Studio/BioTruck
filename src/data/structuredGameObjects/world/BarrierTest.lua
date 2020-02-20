@@ -67,7 +67,15 @@ function GameObjectsTemplate.new(args)
 	--===== init =====--
 	
 	--===== custom functions =====--
-	
+	this.explode = function(this, speed)
+		local posX, posY = this:getPos()
+		this.defaultParticleContainer:addParticle("Smoke", posX, posY)
+		this.defaultParticleContainer:addParticle("Smoke", posX +1, posY)
+		this.defaultParticleContainer:addParticle("Smoke", posX +2, posY)
+		this.defaultParticleContainer:addParticle("Smoke", posX +3, posY)
+		this.defaultParticleContainer:addParticle("Smoke", posX +4, posY)
+		this.defaultParticleContainer:addParticle("Smoke", posX +5, posY)
+	end
 	
 	--===== default functions =====--
 	this.start = function(this) 
