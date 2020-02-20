@@ -456,10 +456,9 @@ function OCGF.Sprite.draw(this, dt, background, offsetX, offsetY, area)
 		this.animation.background = background
 		this.animation:draw(this.posX + offsetX, this.posY + offsetY, dt, nil, background, area)
 	elseif this.useDB then
-		
 		this.gameObject.ocgf.db.setDrawLimit(area[1], area[3], area[2], area[4])
 		
-		this.gameObject.ocgf.db.drawImage(math.floor(this.posX + offsetX +.5), math.floor(this.posY + offsetY +.5), this.texture, nil, area)
+		this.gameObject.ocgf.db.drawImage(math.floor(this.posX + offsetX +.5), math.floor(this.posY + offsetY +.5), this.texture)
 		
 		this.gameObject.ocgf.db.resetDrawLimit()
 	else

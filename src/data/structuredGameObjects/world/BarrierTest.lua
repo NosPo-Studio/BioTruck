@@ -37,6 +37,7 @@ function GameObjectsTemplate.new(args)
 	args.sizeX = 6
 	args.sizeY = 6
 	args.components = { --Define the GameObjects components.
+		--[[
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
@@ -44,10 +45,12 @@ function GameObjectsTemplate.new(args)
 			texture = "test",
 			--texture = "exampleTexture",
 		},
+		]]
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
-			texture = "grass",
+			--texture = "grass",
+			texture = "pipipu",
 		},
 		{"BoxCollider",
 			sx = args.sizeX,
@@ -60,6 +63,8 @@ function GameObjectsTemplate.new(args)
 		fuel = 50,
 	}
 	
+	args.useAnimation = true
+	
 	--===== default stuff =====--
 	local this = global.parent.Barrier.new(args) 
 	this = setmetatable(this, GameObjectsTemplate) 
@@ -69,12 +74,12 @@ function GameObjectsTemplate.new(args)
 	--===== custom functions =====--
 	this.explode = function(this, speed)
 		local posX, posY = this:getPos()
-		this.defaultParticleContainer:addParticle("Smoke", posX, posY)
-		this.defaultParticleContainer:addParticle("Smoke", posX +1, posY)
-		this.defaultParticleContainer:addParticle("Smoke", posX +2, posY)
-		this.defaultParticleContainer:addParticle("Smoke", posX +3, posY)
-		this.defaultParticleContainer:addParticle("Smoke", posX +4, posY)
-		this.defaultParticleContainer:addParticle("Smoke", posX +5, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX +1, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX +2, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX +3, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX +4, posY)
+		this.defaultParticleContainer:addParticle("Blood", posX +5, posY)
 	end
 	
 	--===== default functions =====--

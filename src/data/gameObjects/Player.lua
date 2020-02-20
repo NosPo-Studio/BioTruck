@@ -13,8 +13,8 @@ function Player.new(args)
 	args.sizeX = 6
 	args.sizeY = 6
 	args.components = {
-		{"Sprite", texture = global.texture.player.right},
-		--{"Sprite", texture = "grass"},
+		--{"Sprite", texture = global.texture.player.right},
+		{"Sprite", texture = "grass"},
 		{"RigidBody", g = 0, stiffness = 3},
 		--{"BoxCollider", sx = args.sizeX, sy = args.sizeY},
 	}
@@ -62,7 +62,7 @@ function Player.new(args)
 	
 	this.ctrl_go_key_down = function(this)
 		this.driving = true
-		global.state.game.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
+		--global.state.game.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
 	end
 	this.ctrl_up_key_down = function(this)
 		local newLine = math.min(this.line +1, global.state.game.lines -1)
@@ -97,7 +97,7 @@ function Player.new(args)
 		local targetY = this.line * streetWidth
 		local relativePosY = this.startPosY - posY
 		
-		this:addSpeed(this.momentum, 0)
+		this:addForce(this.momentum, 0)
 		this.momentum = 0
 		
 		
@@ -108,9 +108,9 @@ function Player.new(args)
 		end
 		
 		
-		if game.pcExhaust.smokeRate > this.maxSmoke then
-			game.pcExhaust.smokeRate = math.max(game.pcExhaust.smokeRate - 5 *dt, this.maxSmoke)
-		end
+		--if game.pcExhaust.smokeRate > this.maxSmoke then
+		--	game.pcExhaust.smokeRate = math.max(game.pcExhaust.smokeRate - 5 *dt, this.maxSmoke)
+		--end
 		
 		if this.driving then
 			this.fuel = math.max(this.fuel - this.stats.fuelConsumption * global.dt, 0)
@@ -118,7 +118,7 @@ function Player.new(args)
 			if this.fuel > 0 then
 				this:addForce(force *10 * global.dt, 0, this.stats.maxSpeed)
 			else
-				game.pcExhaust.smokeRate = 0
+				--game.pcExhaust.smokeRate = 0
 			end	
 		end
 		

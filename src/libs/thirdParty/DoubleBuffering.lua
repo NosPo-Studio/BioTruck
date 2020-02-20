@@ -30,7 +30,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
-local version = "v0.3t" --NosPo changes version.
+local version = "v0.3d" --NosPo changes version.
 
 local component = require("component")
 local unicode = require("unicode")
@@ -312,20 +312,22 @@ local function pasteCurrent(startX, startY, picture)
 	end
 end
 
-local function directCopy(x, y, width, height, tx, ty, current)
+local function directCopy(x, y, width, height, tx, ty, current, actualBuffer)
 	local index
-	--cprint(x, y, width, height, tx, ty, current)
-	--GPUProxy.setForeground(0xaaaaaa)
-	--print(x, y, width, height, tx, ty, current)
 	local imageWidth = width
 	local bufferIndex, pictureIndex, bufferIndexStepOnReachOfImageWidth = bufferWidth * (ty - 1) + tx, 3, bufferWidth - imageWidth
 	
+	local newBackgrounds, newForegrounds, newSymbols, currentBackgrounds, currentForegrounds, currentSymbols
 	
-	local newBackgrounds, newForegrounds, newSymbols = {table.unpack(newFrameBackgrounds)}, {table.unpack(newFrameForegrounds)}, {table.unpack(newFrameSymbols)}
+	if actualBuffer then
+		newBackgrounds, newForegrounds, newSymbols, currentBackgrounds, currentForegrounds, currentSymbols = newFrameBackgrounds, newFrameForegrounds, newFrameSymbols, currentFrameBackgrounds, currentFrameForegrounds, currentFrameSymbols
+	else
+		newBackgrounds, newForegrounds, newSymbols = {table.unpack(newFrameBackgrounds)}, {table.unpack(newFrameForegrounds)}, {table.unpack(newFrameSymbols)}
 	
-	local currentBackgrounds, currentForegrounds, currentSymbols
-	if current then
-		currentBackgrounds, currentForegrounds, currentSymbols = {table.unpack(currentFrameBackgrounds)}, {table.unpack(currentFrameForegrounds)}, {table.unpack(currentFrameSymbols)}
+	
+		if current then
+			currentBackgrounds, currentForegrounds, currentSymbols = {table.unpack(currentFrameBackgrounds)}, {table.unpack(currentFrameForegrounds)}, {table.unpack(currentFrameSymbols)}
+		end
 	end
 	
 	for j = y, y + height - 1 do
