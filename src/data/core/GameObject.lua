@@ -262,6 +262,9 @@ function GameObject.new(args)
 			global.run(this.draw, this, realArea, renderArea)
 		end
 		
+		if realArea.gameObjectAttributes[this.ngeAttributes.id] == nil then --WIP: ToDo: Deeper problem?
+			realArea.gameObjectAttributes[this.ngeAttributes.id] = {}
+		end
 		realArea.gameObjectAttributes[this.ngeAttributes.id].mustBeRendered = false
 		realArea.gameObjectAttributes[this.ngeAttributes.id].wasVisible = true
 		

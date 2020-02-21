@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.3d"
+global.gameVersion = "v0.0.4"
 
 --===== shared vars =====--
 local game = {
@@ -28,13 +28,13 @@ local game = {
 		brake = 1,
 		traction = 30,
 		fuelTank = 20,
-		startFuel = 10,
+		startFuel = 300,
 		fuelConsumption = 1,
 		armor = 10,
 		life = 10,
 		damage = 1,
 	},
-	cameraOffsetX = -3,
+	cameraOffsetX = 0,
 	cameraOffsetY = 0,
 	ui = {},
 	ocui = {},
@@ -64,6 +64,9 @@ function game.init()
 	package.loaded["libs/dbgpu_api"] = nil
 	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true})
 	
+	package.loaded["libs/ocal"] = nil
+	global.ocal = require("libs/ocal").initiate({oclrl = global.oclrl, db = global.db, libs = "libs/thirdParty"})
+	
 	package.loaded["libs/ocgf"] = nil
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
 	
@@ -85,8 +88,8 @@ function game.init()
 	
 	game.ui.fuel = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	
-	game.ra1 = global.addRA({
+	--[[
+	game.raMain = global.addRA({
 		posX = 1, 
 		posY = 8, 
 		sizeX = global.resX, 
@@ -94,19 +97,39 @@ function game.init()
 		name = "RA1", 
 		drawBorders = true,
 	})
+	]]
+	game.raMain = global.addRA({
+		posX = 2, 
+		posY = 8, 
+		sizeX = global.resX /3, 
+		sizeY = global.resY - global.conf.consoleSizeY -4, 
+		name = "RA1", 
+		drawBorders = true,
+	})
 	
-	game.goPlayer = game.ra1:addGO("Player", {
+	game.raTest = global.addRA({
+		posX = global.resX /3 +5, 
+		posY = 8, 
+		sizeX = global.resX - global.resX /3 -5, 
+		sizeY = global.resY - global.conf.consoleSizeY -4, 
+		name = "RA2", 
+		drawBorders = true,
+		silent = true,
+		parent = game.raMain,
+	})
+	
+	game.goPlayer = game.raMain:addGO("Player", {
 		posX = 10, 
 		posY = 13, 
 		layer = 4, 
 		name = "player", 
-		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 		stats = game.stats,
 		eoy = -1,
 		eox = 2,
 	})
 	
-	game.pcExhaust = game.ra1:addGO("Exhaust", {
+	game.pcExhaust = game.raMain:addGO("Exhaust", {
 		width = 2, 
 		height = 1, 
 		particle = "Smoke", 
@@ -114,7 +137,7 @@ function game.init()
 		smokeRate = 2 * global.conf.particles,
 	})
 	
-	game.pcDefaultParticleContainer = game.ra1:addGO("DefaultParticleContainer", {})
+	game.pcDefaultParticleContainer = game.raMain:addGO("DefaultParticleContainer", {})
 	
 	print("[game]: init done.")
 end
@@ -122,72 +145,45 @@ end
 function game.start()
 	global.clear()
 	
+	global.worldHandler.start(game, 5, "test")
 	
 	--===== debug =====--
-	
-	game.goBarrierTest = game.ra1:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
-		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	--[[
+	game.goBarrierTest = game.raMain:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
+		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 		defaultParticleContainer = game.pcDefaultParticleContainer,
 	})
-	
+	]]
 	--[[
-	game.goTest = game.ra1:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
-		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	game.goTest = game.raMain:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
+		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 	})
 	
-	game.goTest = game.ra1:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
-		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	game.goTest = game.raMain:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
+		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 	})
-	game.goTest2 = game.ra1:addGO("world/Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
-	game.goTest3 = game.ra1:addGO("world/Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
-		particleContainer = game.ra1:addGO("DefaultParticleContainer", {}),
+	game.goTest2 = game.raMain:addGO("world/Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
+	game.goTest3 = game.raMain:addGO("world/Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
+		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 	})
 	]]
-	
+	--[[
 	game.testGOs = {}
 	local amount = 10
 	local dis = 20
 	for c = 1, amount * dis, dis do
-		table.insert(game.testGOs, game.ra1:addGO("world/BarrierTest", {posX = 34 +c, posY = 12, layer = 3, name = "goBarrierTest",
+		table.insert(game.testGOs, game.raMain:addGO("world/BarrierTest", {posX = 34 +c, posY = 12, layer = 3, name = "goBarrierTest",
 			defaultParticleContainer = game.pcDefaultParticleContainer,
 		}))
 		
 	end
-	
+	]]
 	
 	--===== debug end =====--
 	
 end
 
 function game.update(dt)	
-	if false then 
-		if c == 0 then
-			game.ra1:moveCameraTo(12, 0)
-			c = 1
-		elseif c == 1 then
-			--os.sleep(.5)
-			game.ra1:moveCameraTo(9, 0)
-			c = 2
-		end
-	end
-	
-	
-	if false then
-		if t then
-			game.ra1:moveCamera(1, 0)
-			c = c +1
-			if c > 10 then
-				t = false
-			end
-		else
-			game.ra1:moveCamera(-1, 0)
-			c = c -1
-			if c < 0 then
-				t = true
-			end
-		end
-	end
-	
 	local x, y = game.goPlayer:getPos()
 	local speed = select(1, game.goPlayer:getSpeed())
 	
@@ -196,7 +192,38 @@ function game.update(dt)
 	game.ui.life:setStatus(game.goPlayer.life / game.stats.life)
 	game.ui.armor:setStatus(game.goPlayer.armor / game.stats.armor)
 	
-	--game.ra1:moveCamera(1, 0)
+	global.worldHandler.update()
+	
+	
+	if false then 
+		if c == 0 then
+			game.raMain:moveCameraTo(12, 0)
+			c = 1
+		elseif c == 1 then
+			--os.sleep(.5)
+			game.raMain:moveCameraTo(9, 0)
+			c = 2
+		end
+	end
+	
+	
+	if false then
+		if t then
+			game.raMain:moveCamera(1, 0)
+			c = c +1
+			if c > 10 then
+				t = false
+			end
+		else
+			game.raMain:moveCamera(-1, 0)
+			c = c -1
+			if c < 0 then
+				t = true
+			end
+		end
+	end
+	
+	--game.raMain:moveCamera(1, 0)
 	
 	--print("=====New frame=====")
 	while game.pause do
@@ -247,10 +274,10 @@ function game.key_down(s)
 end
 
 function game.ctrl_camLeft_key_pressed()
-	game.ra1:moveCamera(- 10 * global.dt, 0)
+	game.raTest:moveCamera(- 10 * global.dt, 0)
 end
 function game.ctrl_camRight_key_pressed()
-	game.ra1:moveCamera(10 * global.dt, 0)
+	game.raTest:moveCamera(10 * global.dt, 0)
 end
 
 function game.stop()

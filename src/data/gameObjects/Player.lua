@@ -14,7 +14,7 @@ function Player.new(args)
 	args.sizeY = 6
 	args.components = {
 		{"Sprite", texture = global.texture.player.right},
-		--{"Sprite", texture = "grass"},
+		--{"Sprite", texture = "street1"},
 		{"RigidBody", g = 0, stiffness = 3},
 		--{"BoxCollider", sx = args.sizeX, sy = args.sizeY},
 	}
@@ -44,6 +44,7 @@ function Player.new(args)
 	
 	this.gameObject:addBoxCollider({sx = args.sizeX, sy = args.sizeY, lf = function(_, gameObject)
 		local barrier = gameObject.gameObject.parent
+		if barrier.collide == nil then return end
 		local speedX = this:getSpeed()
 		local damage = speedX * this.stats.damage
 		local backDamage, speedLoss, fuel = barrier:collide(damage, speedX)
@@ -124,7 +125,10 @@ function Player.new(args)
 		
 		this.gameObject:playAnimation(select(1, this:getSpeed() /2))
 		
-		game.ra1:moveCameraTo(posX + game.cameraOffsetX, game.cameraOffsetY)
+		game.raMain:moveCameraTo(posX + game.cameraOffsetX, game.cameraOffsetY)
+		if game.raTest ~= nil then
+			game.raTest:moveCameraTo(posX + game.cameraOffsetX -20, game.cameraOffsetY)
+		end
 	end
 	
 	this.draw = function(this) --will called every time the gameObject will drawed.

@@ -25,7 +25,7 @@ local nosGaConf = {
 	
 	forceSmartMove = false, --forces the SmartMove in linear render mode (for render engine debugging purpose).
 	
-	narrowUpdateExpansion = {0, 0, 0, 0}, --[[ Defines the distance a gameObject can be away from any renderArea but will still updated.
+	narrowUpdateExpansion = false, --[[ Defines the distance a gameObject can be away from any renderArea but will still updated.
 		If it is set to false any gameObject will be updated independent from its position.
 		Can be changed in source for any renderArea independently.
 		
@@ -42,6 +42,7 @@ local nosGaConf = {
 		goDebug = false, --print gameObject management debug (only if isDev).
 		ehDebug = true, --print eventHandler debug (only if isDev).
 		pcDebug = false, --print ParticleContainer debug (only if isDev).
+		whDebug = true, --print worldHandler debug (only if isDev).
 		
 		drawCollider = false,
 		drawTrigger = false,
@@ -51,15 +52,15 @@ local nosGaConf = {
 			conf = true, --should be always true.
 			
 			--=== core ===--
-			re = true, 
+			re = false, 
 			uh = false,
 			eh = false,
-			GameObject = true,
-			RenderArea = true,
+			GameObject = false,
+			RenderArea = false,
 			
 			--=== data groups ===--
-			global = false, --global dir.
-			structuredGlobal = false,
+			global = true, --global dir.
+			structuredGlobal = true,
 			states = false,
 			textures = false,
 			animations = false,

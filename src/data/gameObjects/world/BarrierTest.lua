@@ -35,17 +35,8 @@ function GameObjectsTemplate.new(args)
 	args = args or {} 
 	
 	args.sizeX = 6
-	args.sizeY = 6
+	args.sizeY = 3
 	args.components = { --Define the GameObjects components.
-		
-		{"Sprite", 
-			x = 0, 
-			y = 0, 
-			--texture = global.texture.player.right,
-			texture = "test",
-			--texture = "exampleTexture",
-		},
-		
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
@@ -58,7 +49,7 @@ function GameObjectsTemplate.new(args)
 		},
 	}
 	args.stats = {
-		life = 5,
+		life = .1,
 		hardness = 1,
 		fuel = 50,
 	}
