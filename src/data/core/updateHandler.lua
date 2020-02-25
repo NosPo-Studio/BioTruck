@@ -54,7 +54,7 @@ local function calculateFrame(renderArea)
 		renderArea.updateAnything = false
 		local fromX, toX, fromY, toY = renderArea:getFOV()
 		
-		for i, go in pairs(renderArea.gameObjects) do
+		for go in pairs(renderArea.gameObjects) do
 			local l = go.ngeAttributes.layer
 			
 			if renderArea.layerBlacklist[l] ~= true and 

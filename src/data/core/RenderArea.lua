@@ -92,35 +92,37 @@ function RenderArea.new(args)
 	--===== default functions =====--
 	this.addGO = function(this, go, args)
 		local path, goClass = global.ut.seperatePath(go)
-		local gameObject = global.gameObject
+		--local gameObject = global.gameObject
 		
 		for s in string.gmatch(tostring(path), "[^/]+") do
-			gameObject = gameObject[s]
+			global.gameObject = global.gameObject[s]
 		end
 		
-		if gameObject[goClass] == nil then
+		if global.gameObject[goClass] == nil then
 			print("[RA/" .. tostring(this.name) .. "]: Failed to add gameObject: \"" .. go .. "\" (not found).")
 		else
 			if this.parent ~= nil then
 				return this.parent:addGO(go, args)
 			else
 				local id = #this.gameObjects +1
+				local gameObject = nil
 				
 				print("[RA/" .. tostring(this.name) .. "]: Adding gameObject: \"" .. go .. "\" (#" .. tostring(id) .. ").")
 				
-				this.gameObjects[id] = gameObject[goClass].new(args)
-				this.gameObjects[id].ngeAttributes.id = id
+				gameObject = global.gameObject[goClass].new(args)
 				
-				this.gameObjects[id].ngeAttributes.responsibleRenderAreas[this] = true
-				this.gameObjectAttributes[id] = {
+				this.gameObjects[gameObject] = true
+				
+				gameObject.ngeAttributes.responsibleRenderAreas[this] = true
+				this.gameObjectAttributes[gameObject] = {
 					mustBeRendered = true,
 					lastCalculatedFrame = 0,
 					wasVisible,
 				}
 				
 				for c in pairs(this.childs) do
-					this.gameObjects[id].ngeAttributes.responsibleRenderAreas[c] = true
-					c.gameObjectAttributes[id] = {
+					gameObject.ngeAttributes.responsibleRenderAreas[c] = true
+					c.gameObjectAttributes[gameObject] = {
 						mustBeRendered = true,
 						lastCalculatedFrame = 0,
 						wasVisible,
@@ -128,33 +130,33 @@ function RenderArea.new(args)
 				end
 				
 				--global.run(this.gameObjects[id].spawn)
-				global.run(this.gameObjects[id].ngeStart, this.gameObjects[id])
-				return this.gameObjects[id]
+				global.run(gameObject.ngeStart, gameObject)
+				return gameObject
 			end
 		end
 	end
 	this.remGO = function(this, go)
+		if go == nil then return false end
+		
 		if this.parent ~= nil then
 			return this.parent:remGO(go, args)
 		else
-			local id = go.ngeAttributes.id
-			
 			print("[RA/" .. tostring(this.name) .. "]: Removing gameObject: \"" .. go.ngeAttributes.name .. "\" (#" .. tostring(id) .. ").")
 			
-			this.gameObjectAttributes[id] = nil
+			this.gameObjectAttributes[go] = nil
 			
-			this.gameObjects[id]:ngeClear(this)
-			global.core.re.checkOverlapping(this, this.gameObjects[id], this.gameObjects[id].ngeAttributes.layer)
+			go:ngeClear(this)
+			global.core.re.checkOverlapping(this, go, go.ngeAttributes.layer)
 			for c in pairs(this.childs) do
-				c.gameObjectAttributes[id] = nil
-				c.gameObjects[id]:ngeClear(c)
-				global.core.re.checkOverlapping(c, c.gameObjects[id], c.gameObjects[id].ngeAttributes.layer)
+				c.gameObjectAttributes[go] = nil
+				go:ngeClear(c)
+				global.core.re.checkOverlapping(c, go, go.ngeAttributes.layer)
 			end
 			
 			--global.run(this.gameObjects[id].despawn)
-			global.run(this.gameObjects[id].ngeStop, this.gameObjects[id])
+			global.run(go.ngeStop, go)
 			
-			this.gameObjects[id] = nil
+			this.gameObjects[go] = nil
 		end
 	end
 	this.move = function(this, x, y)
@@ -272,7 +274,7 @@ function RenderArea.new(args)
 				local fromX, toX, fromY, toY = this:getFOV()
 				
 				local function addToDraw(go)
-					if this.gameObjectAttributes[go.ngeAttributes.id].causedByOverlap then
+					if this.gameObjectAttributes[go].causedByOverlap then
 						return
 					end
 					
@@ -337,7 +339,7 @@ function RenderArea.new(args)
 					return check(fromX, toX, fromY, toY)
 				end
 				
-				for i, go in pairs(this.gameObjects) do
+				for go in pairs(this.gameObjects) do
 					if go.ngeAttributes.isVisibleIn[this] then
 						if cmi.clear[1] ~= nil and isInsideArea(this, go, 1) or cmi.clear[2] ~= nil and isInsideArea(this, go, 2) then
 							addToDraw(go)

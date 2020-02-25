@@ -36,12 +36,14 @@ function Player.new(args)
 			global.getButtonTexture(args.buttonSizeX, args.buttonSizeY, this.colors.button[3], this.colors.button[4], args.statName),
 		},
 		lf = function() 
-			global.stats.player[this.stat] = global.stats.player[this.stat] +1
-			global.log(global.stats.player[this.stat])
-			this.ngeAttributes.hasMoved = true
+			if global.stats.player.money > 0 then
+				global.stats.player[this.stat] = global.stats.player[this.stat] +1
+				global.log(global.stats.player[this.stat])
+				this.ngeAttributes.hasMoved = true
+				global.stats.player.money = global.stats.player.money -1
+			end
 		end,
 	})
-	
 	--===== init =====--
 	
 	--===== global functions =====--
@@ -63,7 +65,7 @@ function Player.new(args)
 	end
 	
 	this.stop = function(this)
-		this.button = nil
+		this.button:stop()
 	end
 	
 	return this

@@ -60,10 +60,17 @@ function garage.start()
 	})
 	local _, resX, _, resY = garage.raMain:getRealFOV()
 	resX, resY = resX -1, resY -1
-	local ui = nil
+	garage.ocui = global.ocui.initiate(global.oclrl)
+	local ui = garage.ocui
 	local buttonSizeX, buttonSizeY = 14, 3
 	local buttons = 3
 	local posY = resY / 2 - buttons * (buttonSizeY + 1)
+	local colors = {
+		button = {
+			0x333333, 0x888888, 0x777777, 0xaaaaaa,
+		},
+		background = {0x777777, 0xaaaaaa,},
+	}
 	
 	global.clear()
 	
@@ -77,26 +84,73 @@ function garage.start()
 		FuelConsuption.
 	]]
 	
-	garage.ocui = global.ocui.initiate(global.oclrl)
-	ui = garage.ocui
 	
 	garage.uiUpgrades.uSpeed = garage.raMain:addGO("Upgrade", {
-		x = 10,
-		y = 10, 
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 1 * (buttonSizeY + 1),
 		buttonSizeX = buttonSizeX, 
 		buttonSizeY = buttonSizeY,
 		stat = "speed",
 		statName = "Speed",
-		colors = {
-			button = {
-				0x333333, 0x888888, 0x777777, 0xaaaaaa,
-			},
-			background = {0x777777, 0xaaaaaa,},
-		}
+		colors = colors,
+	})
+	garage.uiUpgrades.uLife = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 2 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "life",
+		statName = "Life",
+		colors = colors,
+	})
+	garage.uiUpgrades.uArmor = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 3 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "armor",
+		statName = "Armor",
+		colors = colors,
+	})
+	garage.uiUpgrades.uTank = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 4 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "tank",
+		statName = "Tank",
+		colors = colors,
+	})
+	garage.uiUpgrades.uDamage = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 5 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "damage",
+		statName = "Damage",
+		colors = colors,
+	})
+	garage.uiUpgrades.uTraction = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 6 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "traction",
+		statName = "Traction",
+		colors = colors,
+	})
+	garage.uiUpgrades.uFuelConsuption = garage.raMain:addGO("Upgrade", {
+		x = resX / 2 - buttonSizeX / 2,
+		y = posY + 7 * (buttonSizeY + 1),
+		buttonSizeX = buttonSizeX, 
+		buttonSizeY = buttonSizeY,
+		stat = "fuelConsuption",
+		statName = "Fuel consuption",
+		colors = colors,
 	})
 	
 	
-	garage.uiUpgrades.bBack = ui.Button.new(ui, {
+	garage.bBack = ui.Button.new(ui, {
 		x = 3,
 		y = resY - buttonSizeY,
 		sx = buttonSizeX,
@@ -123,7 +177,8 @@ function garage.update(dt)
 end
 
 function garage.draw()
-	
+	global.gpu.fill(global.resX / 2 - 3, 1, 10 + global.unicode.len(tostring(global.stats.player.money)), 3, " ")
+	global.gpu.set(global.resX / 2 - global.unicode.len(tostring(global.stats.player.money)) / 2, 2, "Money: " .. tostring(global.stats.player.money))
 	
 	garage.ocui:draw()
 	
@@ -133,7 +188,7 @@ end
 function garage.touch(s)
 	local x, y = s[3], s[4]
 	
-	--garage.ocui:update(x, y)
+	garage.ocui:update(x, y)
 end
 
 function garage.key_down(s)
@@ -147,12 +202,11 @@ function garage.key_down(s)
 end
 
 function garage.stop()
-	if garage.raMain ~= nil then
-		for i, go in pairs(garage.uiUpgrades) do
-			garage.raMain:remGO(go)
-		end
-		global.remRA(garage.raMain)
+	for i, go in pairs(garage.uiUpgrades) do
+		go:destroy()
 	end
+	global.remRA(garage.raMain)
+	garage.ocui:stop()
 end
 
 return garage

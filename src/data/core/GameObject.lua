@@ -198,7 +198,7 @@ function GameObject.new(args)
 	end
 	this.ngeUpdate = function(this, gameObjects, dt, ra) --parent func
 		local ocgfGameObjects = {}
-		for i, go in pairs(gameObjects) do
+		for go in pairs(gameObjects) do
 			table.insert(ocgfGameObjects, go.gameObject)
 		end
 		
@@ -262,11 +262,11 @@ function GameObject.new(args)
 			global.run(this.draw, this, realArea, renderArea)
 		end
 		
-		if realArea.gameObjectAttributes[this.ngeAttributes.id] == nil then --WIP: ToDo: Deeper problem?
-			realArea.gameObjectAttributes[this.ngeAttributes.id] = {}
+		if realArea.gameObjectAttributes[this] == nil then --WIP: ToDo: Deeper problem?
+			realArea.gameObjectAttributes[this] = {}
 		end
-		realArea.gameObjectAttributes[this.ngeAttributes.id].mustBeRendered = false
-		realArea.gameObjectAttributes[this.ngeAttributes.id].wasVisible = true
+		realArea.gameObjectAttributes[this].mustBeRendered = false
+		realArea.gameObjectAttributes[this].wasVisible = true
 		
 		if this.ngeAttributes.drawSize then
 			local posX, posY = this:getPos()

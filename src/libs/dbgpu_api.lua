@@ -25,7 +25,7 @@
     along with dbgpu_api.  If not, see <https://www.gnu.org/licenses/>.	
 ]]
 
-local version = "v0.1.3t"
+local version = "v0.1.3d"
 
 local args = ...
 local path = args.path or ""
@@ -68,6 +68,7 @@ local function draw()
 end
 
 function dbgpu.set(x, y, s, v)
+	s = tostring(s)
 	local sub = getSubFunc(s)
 	x = math.floor(x)
 	y = math.floor(y)
@@ -84,6 +85,7 @@ function dbgpu.set(x, y, s, v)
 end
 
 function dbgpu.fill(x, y, sx, sy, s)
+	s = tostring(s)
 	local sub = getSubFunc(s)
 	x = math.floor(x)
 	y = math.floor(y)

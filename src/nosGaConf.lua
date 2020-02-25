@@ -2,7 +2,8 @@
 
 local nosGaConf = {
 	--defaultState = "game",
-	defaultState = "mainMenu",
+	--defaultState = "mainMenu",
+	defaultState = "garage",
 	
 	targetFramerate = -1, --default is "20". set to "-1" for unlimited framerate (can cause in graphical issures).
 	maxTickTime = .5, --if a tick need more as the maxTickTime the engine will handle the ticke like it had needs exacly the maxTickTime.
@@ -56,7 +57,7 @@ local nosGaConf = {
 			uh = false,
 			eh = false,
 			GameObject = false,
-			RenderArea = false,
+			RenderArea = true,
 			
 			--=== data groups ===--
 			global = true, --global dir.

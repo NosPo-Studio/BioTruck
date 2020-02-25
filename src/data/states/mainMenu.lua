@@ -38,8 +38,6 @@ function mainMenu.init()
 	print("[mainMenu]: Start init.")
 	
 	--===== debug =====--
-	package.loaded["libs/ocui"] = nil
-	global.ocui = require("libs/ocui").initiate(global.oclrl)
 	
 	--===== debug end =====--
 	

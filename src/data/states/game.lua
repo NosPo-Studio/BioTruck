@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.4d"
+global.gameVersion = "v0.0.4.1"
 
 --===== shared vars =====--
 local game = {

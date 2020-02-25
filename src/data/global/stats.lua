@@ -2,6 +2,8 @@ local global = ...
 
 local stats = {
 	player = {
+		money = 10,
+		
 		speed = 1,
 		life = 1,
 		armor = 1,
