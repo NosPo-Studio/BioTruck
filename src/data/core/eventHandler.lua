@@ -68,7 +68,9 @@ end
 local function exportSignal(s, sname)
 	sname = sname or s[1]
 	
-	global.run(global.state[global.currentState][sname], s)
+	if global.state[global.currentState] ~= nil then
+		global.run(global.state[global.currentState][sname], s)
+	end
 	global.core.updateHandler.insertSignal(s, sname)
 	
 	exportCtrlSignal(s, sname)

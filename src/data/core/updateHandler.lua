@@ -107,7 +107,7 @@ end
 function uh.update(dt)
 	dt = dt or global.dt
 	
-	for i, ra in pairs(global.renderAreas) do
+	for ra in pairs(global.renderAreas) do
 		if not ra.silent then
 			calculateFrame(ra)
 			updateFrame(ra, dt)

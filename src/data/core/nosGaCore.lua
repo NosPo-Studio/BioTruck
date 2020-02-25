@@ -75,7 +75,7 @@ local function update()
 	end
 	global.core.updateHandler.update()
 	
-	for i, ra in pairs(global.renderAreas) do
+	for ra in pairs(global.renderAreas) do
 		global.core.re.calculateRenderArea(ra)
 		ra:ngeCalculateNewRender()
 	end

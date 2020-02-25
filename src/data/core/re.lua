@@ -229,7 +229,7 @@ function re.init()
 end
 
 function re.draw()
-	for i, ra in pairs(global.renderAreas) do
+	for ra in pairs(global.renderAreas) do
 		if ra.visible then
 			moveFrame(ra)
 			moveArea(ra)
@@ -252,7 +252,7 @@ function re.newDraw(renderArea)
 end
 
 function re.test()
-	for i, ra in pairs(global.renderAreas) do
+	for ra in pairs(global.renderAreas) do
 		print("TT")
 		calculateFrame(ra)
 		clearFrame()

@@ -1,8 +1,8 @@
 --Setting in here can be overwritten by the conf.lua settings.
 
 local nosGaConf = {
-	--defaultState = "stateTemplate",
-	defaultState = "game",
+	--defaultState = "game",
+	defaultState = "mainMenu",
 	
 	targetFramerate = -1, --default is "20". set to "-1" for unlimited framerate (can cause in graphical issures).
 	maxTickTime = .5, --if a tick need more as the maxTickTime the engine will handle the ticke like it had needs exacly the maxTickTime.
@@ -60,12 +60,12 @@ local nosGaConf = {
 			
 			--=== data groups ===--
 			global = true, --global dir.
-			structuredGlobal = true,
-			states = false,
+			structuredGlobal = false,
+			states = true,
 			textures = false,
 			animations = false,
-			parents = true,
-			gameObjects = false,
+			parents = false,
+			gameObjects = true,
 			structuredGameObjects = false,
 			
 			mods = false, --just reloads the activated data groups of the mods (if only onReload.blocks = true he only also reloads the blocks from mods). should be always true.

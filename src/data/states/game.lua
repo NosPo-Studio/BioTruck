@@ -18,22 +18,11 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.4"
+global.gameVersion = "v0.0.4d"
 
 --===== shared vars =====--
 local game = {
-	stats = {
-		maxSpeed = 10,
-		acceleration = 1,
-		brake = 1,
-		traction = 30,
-		fuelTank = 20,
-		startFuel = 300,
-		fuelConsumption = 1,
-		armor = 10,
-		life = 10,
-		damage = 1,
-	},
+	stats = global.stats,
 	cameraOffsetX = 0,
 	cameraOffsetY = 0,
 	ui = {},
@@ -72,6 +61,10 @@ function game.init()
 	
 	--===== debug end =====--
 	
+	print("[game]: init done.")
+end
+
+function game.start()
 	global.load({
 		toLoad = {
 			parents = true,
@@ -81,6 +74,7 @@ function game.init()
 			animations = true,
 		},
 	})
+	global.clear()
 	
 	game.ocui = global.ocui.initiate(global.oclrl)
 	game.ui.speed = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
@@ -138,12 +132,6 @@ function game.init()
 	})
 	
 	game.pcDefaultParticleContainer = game.raMain:addGO("DefaultParticleContainer", {})
-	
-	print("[game]: init done.")
-end
-
-function game.start()
-	global.clear()
 	
 	global.worldHandler.start(game, 5, "test")
 	

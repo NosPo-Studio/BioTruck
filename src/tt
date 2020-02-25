@@ -55,34 +55,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.	
 
 Starting NosGa Engine v0.3.2d
-Load global: 	function: 0x7f02dc08bfb0	nil
-Initialize: 	function: 0x7f02e00a76f0	nil
+Load global: 	function: 0x7f02e0114aa0	nil
+Initialize: 	function: 0x7f02dc08f330	nil
 useDoubleBuffering: true
-[INIT]: Loading GE: function: 0x7f02d009f640 nil
-[INIT]: Loading RE: function: 0x7f02dc3eab30 nil
-[INIT]: Loading RenderArea: function: 0x7f02d80d1fa0 nil
-[INIT]: Loading GameObject: function: 0x7f02dc6761e0 nil
-[INIT]: Loading eventHandler: function: 0x7f02e00b6880 nil
-[INIT]: Loading luaConsole: function: 0x7f02d8043e30 nil
-[INIT]: Loading global.
-[DLF]: Loading file: /data/global/empty.lua: function: 0x7f02dc074b00
-[DLF]: Loading file: /data/global/drawDebug.lua: function: 0x7f02dc204d60
-[DLF]: Loading file: /data/global/addRA.lua: function: 0x7f02e00a93f0
-[DLF]: Loading file: /data/global/changeState.lua: function: 0x7f02e0007200
-[DLF]: Loading file: /data/global/addTest.lua: function: 0x7f02d80f9dd0
-[DLF]: Loading file: /data/global/globalDebuggingFunctions.lua: function: 0x7f02d814e340
-[DLF]: Loading file: /data/global/getState.lua: function: 0x7f02d016b750
-[DLF]: Loading file: /data/global/clear.lua: function: 0x7f02d0080410
-[INIT]: Check dataLoading: function: 0x7f02dc0488c0 nil
-[DL]: Loading data groups: RenderArea, states, conf, eh, structuredGlobal, GameObject.
-[DL]: Reloading file: data/core/eventHandler.lua: function: 0x7f02dc0948b0
-[DL]: Reloading file: data/core/RenderArea.lua: function: 0x7f02d8044cc0
-[DL]: Reloading file: data/core/GameObject.lua: function: 0x7f02dc40ab90
-[DL]: Loading data group: structuredGlobal.
-[DL]: Loading data group: states.
-[DLF]: Loading file: data/states/game.lua: function: 0x7f02d00b0270
-[DLF]: Loading file: data/states/test.lua: function: 0x7f02dc002ac0
-[Global]: Adding renderArea: 1"RA1".
-[INIT]: Done.
-true
-Init done, starting program: 	function: 0x7f02d819d5c0	nil
+table: 0x7f02d8255c30
+[INIT]: Loading GE: function: 0x7f02d00866c0 nil
+[INIT]: Loading RE: function: 0x7f02e00dd2a0 nil
+[INIT]: Loading RenderArea: function: 0x7f02d825d320 nil
+[INIT]: Loading GameObject: function: 0x7f02e02268f0 nil
+[INIT]: Loading eventHandler: function: 0x7f02dc0b7a00 nil
+[INIT]: Loading luaConsole: function: 0x7f02d8a07050 nil
