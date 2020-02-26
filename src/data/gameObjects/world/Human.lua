@@ -19,17 +19,17 @@
 
 local global = ... --Here we get global.
 
-GameObjectsTemplate = {}
-GameObjectsTemplate.__index = GameObjectsTemplate
+Human = {}
+Human.__index = Human
 
 --Called once when the class is loaded by the engine.
-function GameObjectsTemplate.init(this) 
+function Human.init(this) 
 	
 end
 
 
 --Calles on the bject creation of the class. Here you define/initiate the class.
-function GameObjectsTemplate.new(args) 
+function Human.new(args) 
 	--===== gameObject definition =====--
 	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
@@ -55,9 +55,10 @@ function GameObjectsTemplate.new(args)
 	
 	--===== default stuff =====--
 	local this = global.parent.Barrier.new(args) 
-	this = setmetatable(this, GameObjectsTemplate) 
+	this = setmetatable(this, Human) 
 	
 	--===== init =====--
+	this.ngeAttributes.usesAnimation = false
 	
 	--===== custom functions =====--
 	this.explode = function(this, speed)
@@ -88,4 +89,4 @@ function GameObjectsTemplate.new(args)
 	return this
 end
 
-return GameObjectsTemplate
+return Human

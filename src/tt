@@ -55,13 +55,80 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.	
 
 Starting NosGa Engine v0.3.2d
-Load global: 	function: 0x7f02e0114aa0	nil
-Initialize: 	function: 0x7f02dc08f330	nil
+Load global: 	function: 0x7f02d01a5f90	nil
+Initialize: 	function: 0x7f02d8216e30	nil
 useDoubleBuffering: true
-table: 0x7f02d8255c30
-[INIT]: Loading GE: function: 0x7f02d00866c0 nil
-[INIT]: Loading RE: function: 0x7f02e00dd2a0 nil
-[INIT]: Loading RenderArea: function: 0x7f02d825d320 nil
-[INIT]: Loading GameObject: function: 0x7f02e02268f0 nil
-[INIT]: Loading eventHandler: function: 0x7f02dc0b7a00 nil
-[INIT]: Loading luaConsole: function: 0x7f02d8a07050 nil
+[INIT]: Loading GE: function: 0x7f02d827ccf0 nil
+[INIT]: Loading RE: function: 0x7f02e022b570 nil
+[INIT]: Loading RenderArea: function: 0x7f02d0170690 nil
+[INIT]: Loading GameObject: function: 0x7f02dc1af280 nil
+[INIT]: Loading eventHandler: function: 0x7f02e0165140 nil
+[INIT]: Loading luaConsole: function: 0x7f02d0158360 nil
+[INIT]: Loading global.
+[DLF]: Loading file: /data/global/empty.lua: function: 0x7f02dc0c11c0
+[DLF]: Loading file: /data/global/stats.lua: function: 0x7f02dc530c00
+[DLF]: Loading file: /data/global/remRA.lua: function: 0x7f02e0035650
+[DLF]: Loading file: /data/global/addRA.lua: function: 0x7f02e01aad80
+[DLF]: Loading file: /data/global/getButtonTexture.lua: function: 0x7f02d013d900
+[DLF]: Loading file: /data/global/getState.lua: function: 0x7f02d0213720
+[DLF]: Loading file: /data/global/worldHandler.lua: function: 0x7f02d80f4800
+[DLF]: Loading file: /data/global/addTest.lua: function: 0x7f02dc18bcd0
+[DLF]: Loading file: /data/global/changeState.lua: function: 0x7f02dc3a97b0
+[DLF]: Loading file: /data/global/drawDebug.lua: function: 0x7f02e00fb640
+[DLF]: Loading file: /data/global/globalDebuggingFunctions.lua: function: 0x7f02e054e3e0
+[DLF]: Loading file: /data/global/clear.lua: function: 0x7f02d007dcd0
+[INIT]: Check dataLoading: function: 0x7f02d80f1520 nil
+[DL]: Loading data groups: conf, RenderArea, structuredGlobal, GameObject, eh, states.
+[DL]: Reloading file: data/core/eventHandler.lua: function: 0x7f02d831a1a0
+[DL]: Reloading file: data/core/RenderArea.lua: function: 0x7f02e0422240
+[DL]: Reloading file: data/core/GameObject.lua: function: 0x7f02d006c360
+[DL]: Loading data group: structuredGlobal.
+[DLF]: Loading file: data/structuredGlobal/biome//test.lua: function: 0x7f02e0595c30
+[DL]: Loading data group: states.
+[DLF]: Loading file: data/states/garage.lua: function: 0x7f02d09fb350
+[DLF]: Loading file: data/states/mainMenu.lua: function: 0x7f02d8a4ea40
+[DLF]: Loading file: data/states/credits.lua: function: 0x7f02dc1ca950
+[DLF]: Loading file: data/states/game.lua: function: 0x7f02d0161720
+[DLF]: Loading file: data/states/test.lua: function: 0x7f02d813abd0
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[INIT]: Done.
+true
+Init done, starting program: 	function: 0x7f02dc3ea8c0	nil
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".
+[Global]: Adding renderArea: nil"RA1".
+[Global]: Adding renderArea: nil"RA2".

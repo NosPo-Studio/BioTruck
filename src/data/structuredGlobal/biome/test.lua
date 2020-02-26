@@ -1,7 +1,10 @@
 local global = ...
 
 local testBiome = {
-	barrierChance = 50,
+	barrierChance = 30,
+	barrierGaps = 10,
+	
+	fuelContainerChance = 30,
 	
 	streets = {
 		{name = "StreetTest",
@@ -16,7 +19,9 @@ local testBiome = {
 	},
 	
 	fuelContainers = {
-		
+		{name = "Human",
+			chance = 10,
+		},
 	},
 	
 }

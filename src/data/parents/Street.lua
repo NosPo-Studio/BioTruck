@@ -51,7 +51,6 @@ function GameObjectsTemplate.new(args)
 		local posX = this:getPos()
 		
 		if global.state.game.raMain:getFOV() > posX + this.ngeAttributes.sizeX then
-			global.log("destory")
 			this:destroy()
 		end
 	end
