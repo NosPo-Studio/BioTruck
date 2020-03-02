@@ -24,7 +24,7 @@ function Smoke.new(args)
 	
 	this.rng = pa(args.rng, args.wind, 20)
 	
-	this.gameObject:addRigidBody({g = -pa(args.heat, 20), stiffness = 10})
+	this.gameObject:addRigidBody({g = -pa(args.heat, 20), speedLoss = 1})
 	this.gameObject:addBoxCollider({y = .5, sx = 1, sy = .5})
 	
 	--this.name = pa(args.name, "Smoke")

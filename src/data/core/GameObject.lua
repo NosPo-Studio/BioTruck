@@ -61,8 +61,9 @@ function GameObject.new(args)
 		lastCalculatedFrame = 0,
 		clearAreas = {},
 		copyAreas = {},
-		usesAnimation = pa(args.useAnimation),
+		usesAnimation = pa(args.ua, args.usesAnimation, args.useAnimation),
 		clearedAlready,
+		alive = true,
 	}
 	
 	args.gameObject = global.ut.parseArgs(args.components, args.gameObject) --ToDo: Completly remove args.gameObject from the code.
@@ -177,6 +178,7 @@ function GameObject.new(args)
 	end
 	this.destroy = function(this)
 		for ra in pairs(this.ngeAttributes.responsibleRenderAreas) do
+			this.ngeAttributes.alive = false
 			ra:remGO(this)
 			return
 		end

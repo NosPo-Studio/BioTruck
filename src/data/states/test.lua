@@ -23,6 +23,16 @@ local global = ...
 local test = {
 	camSpeed = 1,
 	pause = false,
+	
+	--debug
+	stats = global.stats,
+	cameraOffsetX = 0,
+	cameraOffsetY = 0,
+	ui = {},
+	ocui = {},
+	maxDistance = 0,
+	lines = 3,
+	streetWidth = 5,
 }
 
 --===== local vars =====--
@@ -59,12 +69,12 @@ function test.start()
 	package.loaded["libs/ocgf"] = nil
 	
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
-	
+
 	
 	--===== debug =====--
 	--Creating 2 RenderAreas (windows) showing the same scene.
 	
-	test.ra1 = global.addRA({
+	test.raMain = global.addRA({
 		posX = 2, 
 		posY = 3, 
 		sizeX = 55, 
@@ -72,26 +82,43 @@ function test.start()
 		name = "TRA1", 
 		drawBorders = true,
 	})
-	test.ra2 = global.addRA({posX = 59, posY = 3, sizeX = 55, sizeY = 20, name = "TRA2", drawBorders = true, parent = test.ra1})
+	test.ra2 = global.addRA({posX = 59, posY = 3, sizeX = 55, sizeY = 20, name = "TRA2", drawBorders = true, parent = test.raMain})
 	
-	test.goTest = test.ra1:addGO("Test2", {posX = 4 +100, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
-		particleContainer = test.ra1:addGO("DefaultParticleContainer", {}),
+	test.goPlayer = test.raMain:addGO("Player", {
+		posX = 10, 
+		posY = 13, 
+		layer = 4, 
+		name = "player", 
+		particleContainer = test.raMain:addGO("DefaultParticleContainer", {}),
+		stats = global.stats,
+		eoy = -1,
+		eox = 2,
 	})
-	test.goTest2 = test.ra1:addGO("Test3", {posX = 35 +100, posY = 8, layer = 2, name = "goTest2"})
-	test.goTest3 = test.ra1:addGO("Test4", {posX = 15 +100, posY = 12, layer = 2, name = "goTest3",
-		particleContainer = test.ra1:addGO("DefaultParticleContainer", {}),
+	
+	test.pcExhaust = test.raMain:addGO("Exhaust", {
+		width = 2, 
+		height = 1, 
+		particle = "Smoke", 
+		parent = test.goPlayer,
+		smokeRate = 2 * global.conf.particles,
 	})
 	
-	--test.goTest3:attach(test.goTest)
+	test.goHuman = test.raMain:addGO("TestHuman", {
+		posX = 30, 
+		posY = 13, 
+		layer = 4, 
+		name = "human", 
+		particleContainer = test.raMain:addGO("DefaultParticleContainer", {}),
+	})
 	
-	--test.goTest4 = test.ra1:addGO("Test2", {posX = 25 +100, posY = 2, layer = 3, maxSpeed = 0, name = "goTest4"})
-	--test.goTest5 = test.ra1:addGO("Test2", {posX = 30 +100, posY = 2, layer = 3, maxSpeed = 0, name = "goTest5"})test.ra1:addGO("ParticleTestContainer"
 	
-	test.pc1 = test.ra1:addGO("ParticleTestContainer", {posX = 20 +100, posY = 3, layer = 5, name = "PC1"})
 	
-	--Moce cameras to x 100.
-	test.ra1:moveCameraTo(100, 0)
-	test.ra2:moveCameraTo(100, 0)
+	--test.goPlayer.drive = true
+	--test.goPlayer:addForce(20, 0)
+	
+	--test.goHuman:collide(1000, 0)
+	
+	--global.sfx.explosion(test.raMain:addGO("DefaultParticleContainer", {}), 20, 10, "Smoke", 40, 10)
 	
 	--===== debug end =====--
 	
@@ -113,11 +140,11 @@ function test.update()
 		--empty to get sure the cam is reseted.
 		test.camTestStep = test.camTestStep +1
 	elseif test.camTestStep == 1 then
-		--test.ra1:moveCamera(10, 0)
+		--test.raMain:moveCamera(10, 0)
 		test.tgo1:move(20, 0)
 		test.camTestStep = test.camTestStep +1
 	elseif test.camTestStep == 2 then
-		test.ra1:moveCamera(5, 0)
+		test.raMain:moveCamera(5, 0)
 		test.tgo1:move(-10, 0)
 		test.camTestStep = test.camTestStep +1
 	elseif test.camTestStep == 3 then
@@ -138,9 +165,11 @@ function test.update()
 end
 
 function test.draw()
-	--global.slog(test.ra1.copyInstructions)
+	--global.slog(test.raMain.copyInstructions)
 	
 	--global.gpu:drawChanges()
+	
+	global.drawDebug()
 end
 
 function test.key_down(s)
@@ -156,20 +185,20 @@ function test.key_down(s)
 		--test.goTest3:setSpeed(10, 0)
 		--test.goTest:setSpeed(15, 0)
 		
-		--test.tgo1:ngeDraw(test.ra1)
-		--test.rbm1:ngeDraw(test.ra1)
+		--test.tgo1:ngeDraw(test.raMain)
+		--test.rbm1:ngeDraw(test.raMain)
 		--global.gpu.fill(6, 3, 25, 22, "#")
 		
-		--test.ra1:moveCamera(3, 3)
+		--test.raMain:moveCamera(3, 3)
 		
-		--test.ra1:moveCamera(1, 0)
-		--test.ra1:moveCamera(1, 0)
-		--test.ra1:moveCamera(-1, 0)
+		--test.raMain:moveCamera(1, 0)
+		--test.raMain:moveCamera(1, 0)
+		--test.raMain:moveCamera(-1, 0)
 		
-		--test.ra1:moveCameraTo(100, 0)
+		--test.raMain:moveCameraTo(100, 0)
 		--test.camTestStep = 0
 		
-		--test.ra1.toClear[5][test.tgo1] = true
+		--test.raMain.toClear[5][test.tgo1] = true
 		
 	end 
 	
@@ -180,7 +209,7 @@ end
 
 function test.key_pressed(s)
 	--print("KEY PRESSED:", s[3], s[4], global.currentFrame)
-	--test.ra1:rerenderAll()
+	--test.raMain:rerenderAll()
 	--test.ra2:rerenderAll()
 	
 	
@@ -192,26 +221,26 @@ end
 
 function test.touch(s)
 	--print(s[3], s[4], s[5])
-	--print(test.ra1:getPos(x, y))
+	--print(test.raMain:getPos(x, y))
 end
 
 function test.ctrl_pause_key_down(s, sname)
 	test.pause = true
 end
-
+--[[
 function test.ctrl_camLeft(s, sname)
-	test.ra1:moveCamera(-test.camSpeed, 0)
+	test.raMain:moveCamera(-test.camSpeed, 0)
 end
 function test.ctrl_camRight(s, sname)
-	test.ra1:moveCamera(test.camSpeed, 0)
+	test.raMain:moveCamera(test.camSpeed, 0)
 end
 function test.ctrl_camUp(s, sname)
-	test.ra1:moveCamera(0, test.camSpeed)
+	test.raMain:moveCamera(0, test.camSpeed)
 end
 function test.ctrl_camDown(s, sname)
-	test.ra1:moveCamera(0, -test.camSpeed)
+	test.raMain:moveCamera(0, -test.camSpeed)
 end
-
+]]
 function test.ctrl_test(s, sname)
 	--print("TEST", global.currentFrame, sname, tostring(s[3]), tostring(s[4]))
 	--print("TEST", global.currentFrame, sname, tostring(s[1]), tostring(s[2]), tostring(s[3]), tostring(s[4]), tostring(s[5]), tostring(s[6]))

@@ -4,12 +4,13 @@ local nosGaConf = {
 	defaultState = "game",
 	--defaultState = "mainMenu",
 	--defaultState = "garage",
+	--defaultState = "test",
 	
 	targetFramerate = -1, --default is "20". set to "-1" for unlimited framerate (can cause in graphical issures).
 	maxTickTime = .5, --if a tick need more as the maxTickTime the engine will handle the ticke like it had needs exacly the maxTickTime.
 	fpsCheckInterval = 20, --defines what amout of frames the engine use to calculate the avg. fps.
 	
-	showConsole = true, --can be changes ingame by pressing f1 by default.
+	showConsole = false, --can be changes ingame by pressing f1 by default.
 	showDebug = true, --can be changes ingame by pressing f3 by default.
 	consoleSizeY = 40, --the height of the console.
 	directConsoleDraw = true, --instant drawing console outputs instead of waiting til new frame (has only an affect if doubleBuffering used) (only if isDev).
@@ -43,7 +44,7 @@ local nosGaConf = {
 		goDebug = false, --print gameObject management debug (only if isDev).
 		ehDebug = true, --print eventHandler debug (only if isDev).
 		pcDebug = false, --print ParticleContainer debug (only if isDev).
-		whDebug = true, --print worldHandler debug (only if isDev).
+		whDebug = false, --print worldHandler debug (only if isDev).
 		
 		drawCollider = false,
 		drawTrigger = false,
@@ -65,7 +66,7 @@ local nosGaConf = {
 			states = false,
 			textures = false,
 			animations = false,
-			parents = false,
+			parents = true,
 			gameObjects = true,
 			structuredGameObjects = false,
 			

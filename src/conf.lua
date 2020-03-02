@@ -3,7 +3,7 @@
 local conf = {
 	texturePack = "default",
 	
-	particles = 0,
+	particles = 1,
 	
 	uiForegroundColor = 0xaaaaaa,
 	uiBackgroundColor = 0x666666,

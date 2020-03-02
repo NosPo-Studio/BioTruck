@@ -65,7 +65,7 @@ if global.conf.useDoubleBuffering then
 else
 	global.gpu = global.component.gpu
 end
-global.oclrl = require("libs/oclrl").initiate(global.gpu)
+global.oclrl = require("libs/oclrl").initiate(global.gpu, {checkColor = true})
 global.ocal = require("libs/ocal").initiate({oclrl = global.oclrl, db = global.db, libs = "libs/thirdParty"})
 --global.oclrl = require("oclrl").initiate(global.gpu)
 global.ocui = require("libs/ocui").initiate(global.oclrl)

@@ -42,6 +42,8 @@ function Player.new(args)
 	this.driving = false
 	this.maxSmoke = 10
 	
+	this.state = global.getState()
+	
 	this.gameObject:addBoxCollider({sx = args.sizeX, sy = args.sizeY, lf = function(_, gameObject)
 		local barrier = gameObject.gameObject.parent
 		if barrier.collide == nil then return end
@@ -63,10 +65,10 @@ function Player.new(args)
 	
 	this.ctrl_go_key_down = function(this)
 		this.driving = true
-		global.state.game.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
+		this.state.pcExhaust.smokeRate = this.maxSmoke * 2 * global.conf.particles
 	end
 	this.ctrl_up_key_down = function(this)
-		local newLine = math.min(this.line +1, global.state.game.lines -1)
+		local newLine = math.min(this.line +1, this.state.lines -1)
 		
 		if newLine ~= this.line then
 			this.line = newLine
@@ -90,7 +92,8 @@ function Player.new(args)
 	end
 	
 	this.update = function(this, dt, ra) --will called on every game tick.
-		local game = global.state.game
+		--local game = this.state
+		local game = global.getState()
 		local streetWidth = game.streetWidth
 		local force = this.stats.acceleration
 		local posX, posY = this:getPos()

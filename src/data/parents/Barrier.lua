@@ -40,12 +40,15 @@ function GameObjectsTemplate.new(args)
 	this = setmetatable(this, GameObjectsTemplate) 
 	
 	--===== init =====--
-	this.particleContainer = args.particleContainer
-	this.defaultParticleContainer = args.defaultParticleContainer
+	if global.conf.particles > 0 then
+		this.particleContainer = args.particleContainer or global.getState().raMain:addGO("DefaultParticleContainer", {selfDestroy = true, parent = this})
+		this.defaultParticleContainer = args.defaultParticleContainer
+	end
 	
 	this.stats = args.stats
 	this.life = args.stats.life
 	
+	this.state = global.getState()
 	
 	--===== custom functions =====--
 	this.collide = function(this, damage, speedX)
@@ -72,7 +75,7 @@ function GameObjectsTemplate.new(args)
 	this.pUpdate = function(this, dt, ra) 
 		local posX = this:getPos()
 		
-		if global.state.game.raMain:getFOV() > posX + this.ngeAttributes.sizeX then
+		if this.state.raMain:getFOV() > posX + this.ngeAttributes.sizeX then
 			this:destroy()
 			return
 		end

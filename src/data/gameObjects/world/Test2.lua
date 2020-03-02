@@ -53,11 +53,12 @@ function GameObjectsTemplate.new(args)
 			g = 0,
 			stiffness = 20,
 		},
-		{"BoxCollider",
+		{"BoxTrigger",
 			sx = args.sizeX,
 			sy = args.sizeY,
 		},
 	}
+	--args.usesAnimation = true
 	
 	--===== default stuff =====--
 	--Inheritance from the GameObject main class.
@@ -72,10 +73,22 @@ function GameObjectsTemplate.new(args)
 	
 	this.particleContainer = args.particleContainer
 	
-	this.gameObject.rigidBodys[1].test = "t"
+	this.speedX = 10
+	this.speedY = 10
 	
 	--===== custom functions =====--
-	
+	this.ctrl_camLeft_key_pressed = function(s)
+		this:setSpeed(-this.speedX, 0)
+	end
+	this.ctrl_camRight_key_pressed = function(s)
+		this:setSpeed(this.speedX, 0)
+	end
+	this.ctrl_camUp_key_pressed = function(s)
+		this:setSpeed(0, -this.speedY)
+	end
+	this.ctrl_camDown_key_pressed = function(s)
+		this:setSpeed(0, this.speedY)
+	end
 	
 	--===== default functions =====--
 	--Called when this GameObject is added to a RenderArea.
@@ -85,8 +98,7 @@ function GameObjectsTemplate.new(args)
 	
 	--Called up to once a frame.
 	this.update = function(this, dt, ra) 
-		--this.anim:draw(args.posX -90, 10)
-		--this.anim2:draw(args.posX -90, 5)
+		
 	end
 	
 	--[[Called every time the GameObject is drawed. 

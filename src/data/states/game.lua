@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.5"
+global.gameVersion = "v0.0.6"
 
 --===== shared vars =====--
 local game = {
@@ -46,7 +46,7 @@ function game.init()
 	print("[game]: Start init.")
 	
 	--===== debug =====--
-	
+	--[[
 	package.loaded["libs/thirdParty/DoubleBuffering"] = nil
 	global.db = require("libs/thirdParty/DoubleBuffering")
 	
@@ -58,13 +58,15 @@ function game.init()
 	
 	package.loaded["libs/ocgf"] = nil
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
-	
+	]]
 	--===== debug end =====--
 	
 	print("[game]: init done.")
 end
 
 function game.start()
+	local resX, resY = global.resX, global.resY
+	
 	global.load({
 		toLoad = {
 			parents = true,
@@ -77,11 +79,11 @@ function game.start()
 	global.clear()
 	
 	game.ocui = global.ocui.initiate(global.oclrl)
-	game.ui.speed = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	game.ui.armor = game.ocui.Bar.new(game.ocui, {posX = 10, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.speed = game.ocui.Bar.new(game.ocui, {posX = 10, posY = resY -5, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.armor = game.ocui.Bar.new(game.ocui, {posX = 10, posY = resY -3, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	
-	game.ui.fuel = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 2, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = 4, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.fuel = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = resY -5, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
+	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = resY -3, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	--[[
 	game.raMain = global.addRA({
 		posX = 1, 
@@ -93,19 +95,19 @@ function game.start()
 	})
 	]]
 	game.raMain = global.addRA({
-		posX = 2, 
-		posY = 8, 
-		sizeX = global.resX /3, 
-		sizeY = global.resY - global.conf.consoleSizeY -4, 
+		posX = 15, 
+		posY = 1, 
+		sizeX = global.resX -30, 
+		sizeY = 20, 
 		name = "RA1", 
 		drawBorders = true,
 	})
 	
 	game.raTest = global.addRA({
-		posX = global.resX /3 +5, 
-		posY = 8, 
-		sizeX = global.resX - global.resX /3 -5, 
-		sizeY = global.resY - global.conf.consoleSizeY -4, 
+		posX = 2, 
+		posY = 22, 
+		sizeX = global.resX -2, 
+		sizeY = 20, 
 		name = "RA2", 
 		drawBorders = true,
 		silent = true,
@@ -227,18 +229,18 @@ function game.ctrl_pause_key_down(s, sname)
 end
 
 function game.draw()
+	local resX, resY = global.resX, global.resY
 	game.maxDistance = math.max(game.goPlayer:getPos(), game.maxDistance)
-	
 	
 	global.gpu.setBackground(global.conf.uiBackgroundColor)
 	global.gpu.setForeground(global.conf.uiForegroundColor)
-	global.gpu.fill(1, 1, global.resX, 7, " ")
-	global.gpu.set(3, 2, "Speed:")
-	global.gpu.set(global.resX / 2 + 3, 2, "Fuel:")
-	global.gpu.set(3, 4, "Armor:")
-	global.gpu.set(global.resX / 2 + 3, 4, "Life:")
+	global.gpu.fill(1, resY - 6, global.resX, 7, " ")
+	global.gpu.set(3, resY - 5, "Speed:")
+	global.gpu.set(global.resX / 2 + 3, resY -5, "Fuel:")
+	global.gpu.set(3, resY - 3, "Armor:")
+	global.gpu.set(global.resX / 2 + 3, resY - 3, "Life:")
 	
-	global.gpu.set(global.resX / 2 - 10, 6, "Max distance: " .. tostring(game.maxDistance))
+	global.gpu.set(global.resX / 2 - 10, resY - 1, "Max distance: " .. tostring(game.maxDistance))
 	
 	game.ocui:draw()
 	

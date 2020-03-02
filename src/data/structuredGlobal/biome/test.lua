@@ -19,7 +19,7 @@ local testBiome = {
 	},
 	
 	fuelContainers = {
-		{name = "Human",
+		{name = "TestHuman",
 			chance = 10,
 		},
 	},

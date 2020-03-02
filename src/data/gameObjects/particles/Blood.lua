@@ -13,7 +13,7 @@ function Smoke.new(args)
 	args = args or {}
 	args.name = "Blood"
 	args.color = 0x8a0303
-	args.lifeTime = pa(args.lt, args.lifeTime, args.maxLifeTime, 10)
+	args.lifeTime = pa(args.lt, args.lifeTime, args.maxLifeTime, 3)
 	
 	--===== default stuff =====--
 	local this = global.parent.Particle.new(args)

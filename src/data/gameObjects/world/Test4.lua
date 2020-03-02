@@ -48,10 +48,12 @@ function GameObjectsTemplate.new(args)
 			speedRetain = 1,
 			stickiness = .5,
 		},
+		--[[
 		{"BoxCollider",
 			sx = args.sizeX,
 			sy = args.sizeY,
 		},
+		]]
 	}
 	
 	--===== default stuff =====--

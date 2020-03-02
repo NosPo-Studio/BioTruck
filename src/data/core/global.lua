@@ -88,15 +88,11 @@ function global.print(...)
 	global.tbConsole:add(s)
 	global.ocl.add(s)
 	
-	if global.conf.showConsole then
+	if global.conf.showConsole and global.conf.debug.isDev and global.conf.directConsoleDraw and global.conf.useDoubleBuffering then
+		global.ocui.oclrl.gpu = global.realGPU
 		global.tbConsole:draw()
-		
-		if global.conf.debug.isDev and global.conf.directConsoleDraw and global.conf.useDoubleBuffering then
-			global.ocui.oclrl.gpu = global.realGPU
-			global.tbConsole:draw()
-			global.ocui.oclrl.gpu = global.gpu
-		end
-	end
+		global.ocui.oclrl.gpu = global.gpu
+	end	
 end
 
 function cprint(...)
@@ -137,7 +133,7 @@ function global.slog(...)
 	global.print("[SINFO]: End.")
 end
 
-function global.setConsoleSize(size)
+function global.setConsoleSize(size) --obsolete
 	size = size or global.conf.consoleSizeY
 	global.tbConsole.sizeX = global.resX
 	global.tbConsole.sizeY = global.resY - (global.resY - size)

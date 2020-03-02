@@ -75,6 +75,8 @@ function ParticleContainer.new(args)
 	this.type = args.type
 	this.useCollision = pa(args.uc, args.useCollision, false)
 	this.particleSizeX = 1
+	this.selfDestroy = pa(args.sd, args.selfDestroy, false)
+	this.parent = args.parent
 	
 	if this.type == 2 then
 		this.particleSizeX = 2
@@ -178,6 +180,10 @@ function ParticleContainer.new(args)
 			this.lastMaxX = maxX
 			this.lastMaxY = maxY
 		else
+			if this.parent ~= nil and this.parent.ngeAttributes.alive == false and this.selfDestroy then
+				this:destroy()
+				global.log("DEST")
+			end
 			this.newSizeX, this.newSizeY, this.lastMaxX, this.lastMaxY = 1, 1, 1, 1
 			move(this, this.moveToX, this.moveToY, this.newSizeX, this.newSizeY)
 		end

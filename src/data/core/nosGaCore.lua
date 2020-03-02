@@ -96,7 +96,7 @@ local function draw()
 	global.ocui:draw()
 	
 	if global.conf.showConsole then
-		global.tbConsole:draw()
+		global.mConsole:draw()
 	end
 	
 	if global.conf.useDoubleBuffering then

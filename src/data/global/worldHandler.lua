@@ -10,6 +10,9 @@ local wh = {
 	lastCalculatedX = 0,
 	lastGapX = 0,
 	lastGapY = 0,
+	createdStreets = 0,
+	createdBarriers = 0,
+	createdFuleContainers = 0,
 }
 
 --===== local functions =====--
@@ -66,13 +69,20 @@ end
 local function placeStreet(toX)
 	while wh.lastStreetPosX < toX do
 		print("[WH]: Adding street: X: " .. tostring(wh.lastStreetPosX))
-		local go = wh.ra:addGO(pickObject(wh.biome.maxStreetChance, wh.biome.streets).name, {
+		local street = pickObject(wh.biome.maxStreetChance, wh.biome.streets)
+		local go = wh.ra:addGO(street.name, {
 			posX = wh.lastStreetPosX, 
 			posY = wh.posY, 
 			layer = 2,
-			name = "Street",
+			name = "Street_" .. tostring(wh.createdStreets),
 		})
-		wh.lastStreetPosX = wh.lastStreetPosX + go.ngeAttributes.sizeX
+		
+		if go ~= nil then
+			wh.lastStreetPosX = wh.lastStreetPosX + go.ngeAttributes.sizeX
+			wh.createdStreets = wh.createdStreets +1
+		else
+			global.warn("[WH]: Could not create Street: " .. tostring(street.name))
+		end
 	end
 end
 
@@ -93,11 +103,16 @@ local function placeBarrier(fromX, toX)
 					posY = wh.posY + (i -1) * wh.game.streetWidth, 
 					layer = 3,
 					defaultParticleContainer = wh.game.pcDefaultParticleContainer,
-					name = "Barrier",
+					name = "Barrier_" .. tostring(wh.createdBarriers),
 				})
 				
-				wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
-				wh.lastBarrierPosX[i] = posX + object.ngeAttributes.sizeX
+				if object ~= nil then
+					wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
+					wh.lastBarrierPosX[i] = posX + object.ngeAttributes.sizeX
+					wh.createdBarriers = wh.createdBarriers +1
+				else
+					global.warn("[WH]: Could not create Barrier: " .. tostring(barrier.name))
+				end
 			end
 		end
 		posX = posX +1
@@ -120,10 +135,15 @@ local function placeFuelContainer(fromX, toX)
 					posY = wh.posY + (i -1) * wh.game.streetWidth, 
 					layer = 3,
 					defaultParticleContainer = wh.game.pcDefaultParticleContainer,
-					name = "FuelContainer",
+					name = "FuelContainer_" .. tostring(wh.createdFuleContainers),
 				})
 				
-				wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
+				if object ~= nil then
+					wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
+					wh.createdFuleContainers = wh.createdFuleContainers +1
+				else
+					global.warn("[WH]: Could not create FuleContainer: " .. tostring(fuelContainer.name))
+				end
 			end
 		end
 		posX = posX +1

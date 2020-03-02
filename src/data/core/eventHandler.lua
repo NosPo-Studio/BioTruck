@@ -85,6 +85,10 @@ local function parseSignal(signal)
 		end
 	end
 	
+	if global.conf.showConsole and signal[1] == "touch" then
+		global.mConsole:update(signal[3], signal[4])
+	end
+	
 	global.run(global.core.eventHandler[signal[1]], signal)
 	
 	if signal[1] ~= "key_down" then

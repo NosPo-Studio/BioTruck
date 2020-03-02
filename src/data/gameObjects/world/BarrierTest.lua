@@ -52,9 +52,10 @@ function GameObjectsTemplate.new(args)
 		life = .1,
 		hardness = 1,
 		fuel = 50,
+		dust = 6,
+		dustPressure = 10,
 	}
 	
-	args.useAnimation = true
 	
 	--===== default stuff =====--
 	local this = global.parent.Barrier.new(args) 
@@ -64,13 +65,13 @@ function GameObjectsTemplate.new(args)
 	
 	--===== custom functions =====--
 	this.explode = function(this, speed)
-		local posX, posY = this:getPos()
-		this.defaultParticleContainer:addParticle("Blood", posX, posY)
-		this.defaultParticleContainer:addParticle("Blood", posX +1, posY)
-		this.defaultParticleContainer:addParticle("Blood", posX +2, posY)
-		this.defaultParticleContainer:addParticle("Blood", posX +3, posY)
-		this.defaultParticleContainer:addParticle("Blood", posX +4, posY)
-		this.defaultParticleContainer:addParticle("Blood", posX +5, posY)
+		local x, y = this:getPos()
+		local sx, sy = this:getSize()
+		x, y = x + sx / 2, y + sy / 2
+		
+		if this.particleContainer == nil then return end
+		
+		global.sfx.explosion(this.particleContainer, x, y, "Smoke", args.stats.dust * global.conf.particles, args.stats.dustPressure)
 	end
 	
 	--===== default functions =====--

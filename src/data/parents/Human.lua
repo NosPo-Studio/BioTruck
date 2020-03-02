@@ -27,64 +27,59 @@ function Human.init(this)
 	
 end
 
-
 --Calles on the bject creation of the class. Here you define/initiate the class.
 function Human.new(args) 
 	--===== gameObject definition =====--
 	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
-	
 	args.sizeX = 6
 	args.sizeY = 6
-	args.components = { --Define the GameObjects components.
-		{"Sprite", 
-			x = 0, 
-			y = 0, 
-			texture = global.texture.player.left,
-		},
-		{"BoxCollider",
-			sx = args.sizeX,
-			sy = args.sizeY,
-		},
-	}
-	args.stats = {
-		life = 5,
-		hardness = .1,
-		fuel = 5,
-	}
+	
+	table.insert(args.components, {
+		"BoxCollider",
+		sx = args.sizeX,
+		sy = args.sizeY,
+	})
 	
 	--===== default stuff =====--
 	local this = global.parent.Barrier.new(args) 
 	this = setmetatable(this, Human) 
 	
 	--===== init =====--
-	this.ngeAttributes.usesAnimation = false
+	--this.args = args
 	
 	--===== custom functions =====--
-	this.explode = function(this, speed)
+	this.explode = global.expandFunction(function(this, speed)
+		local x, y = this:getPos()
+		local sx, sy = this:getSize()
+		x, y = x + sx / 2, y --+ sy / 2
 		
-	end
+		if this.particleContainer == nil then return end
+		
+		global.sfx.explosion(this.particleContainer, x, y, "Blood", args.stats.blood * global.conf.particles, args.stats.bloodPressure)
+		
+	end, this.explode or function() end)
 	
 	--===== default functions =====--
-	this.start = function(this) 
+	this.pStart = global.expandFunction(this.pStart, function(this)
 		
-	end
+	end)
 	
-	this.update = function(this, dt, ra) 
+	this.pUpdate = global.expandFunction(this.pUpdate, function(this, dt, ra) 
 		
-	end
+	end)
 	
-	this.draw = function(this) 
-	
-	end
-	
-	this.clear = function(this, acctual) 
+	this.pDraw = global.expandFunction(this.pDraw, function(this, ra) 
 		
-	end
+	end)
 	
-	this.stop = function(this) 
+	this.pClear = global.expandFunction(this.pClear, function(this, acctual) 
 		
-	end
+	end)
+	
+	this.pStop = global.expandFunction(this.pStop, function(this) 
+		--this.particleContainer:destroy()
+	end)
 	
 	return this
 end
