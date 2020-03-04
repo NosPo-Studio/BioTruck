@@ -17,38 +17,42 @@
     along with the NosGa Engine.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-local global = ... --Here we get global.
+local global = ... 
 
-GameObjectsTemplate = {}
-GameObjectsTemplate.__index = GameObjectsTemplate
+StreetTest = {}
+StreetTest.__index = StreetTest
 
---Called once when the class is loaded by the engine.
-function GameObjectsTemplate.init(this) 
-	
-end
-
-
---Calles on the bject creation of the class. Here you define/initiate the class.
-function GameObjectsTemplate.new(args) 
+function StreetTest.new(args) 
 	--===== gameObject definition =====--
-	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
 	
 	args.sizeX = 20
 	args.sizeY = 15
-	args.components = { --Define the GameObjects components.
+	args.components = {
 		{"Sprite", 
 			x = 0, 
 			y = 0, 
 			texture = "street1",
 		},
 	}
+	args.dots = { --dot = {posX, posY, sizeX, sizeY, normalColor, activeColor}
+		{ --Bottom line.
+			{1, 24, 5, 1, 0xaa0000, 0x00aa00}, --Dot one.
+		},
+		{ --Middle line.
+			{1, 13, 5, 1, 0xaa0000, 0x00aa00}, --Dot one.
+			{3, 12, 1, 3, 0xaa0000, 0x00aa00}, --Dot two.
+		},
+		{ --Uppder line.
+			{1, 4, 5, 1, 0xaa0000, 0x00aa00}, --Dot one.
+		},
+	}
 	
 	--===== default stuff =====--
 	local this = global.parent.Street.new(args) 
-	this = setmetatable(this, GameObjectsTemplate) 
+	this = setmetatable(this, StreetTest) 
 	
 	return this
 end
 
-return GameObjectsTemplate
+return StreetTest

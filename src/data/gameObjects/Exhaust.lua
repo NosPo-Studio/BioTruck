@@ -16,7 +16,14 @@ function ParticleTestContainer.new(args)
 	args.updateAlways = true
 	
 	--===== default stuff =====--
-	local this = global.parent.ParticleContainer.new(args)
+	local this = nil
+	
+	if args.particleContainer ~= nil then
+		this = args.particleContainer
+	else
+		this = global.parent.ParticleContainer.new(args)
+	end
+	
 	this = setmetatable(this, ParticleTestContainer)
 	
 	--===== init =====--

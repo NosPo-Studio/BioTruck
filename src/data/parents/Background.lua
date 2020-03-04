@@ -19,71 +19,65 @@
 
 local global = ... --Here we get global.
 
-Human = {}
-Human.__index = Human
+GameObjectsTemplate = {}
+GameObjectsTemplate.__index = GameObjectsTemplate
 
 --Called once when the class is loaded by the engine.
-function Human.init(this) 
+function GameObjectsTemplate.init(this) 
 	
 end
 
+
 --Calles on the bject creation of the class. Here you define/initiate the class.
-function Human.new(args) 
+function GameObjectsTemplate.new(args) 
 	--===== gameObject definition =====--
 	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
-	args.sizeX = 6
-	args.sizeY = 6
-	
-	table.insert(args.components, {
-		"BoxCollider",
-		sx = args.sizeX,
-		sy = args.sizeY,
-	})
+	args.isParent = true
 	
 	--===== default stuff =====--
-	local this = global.parent.Barrier.new(args) 
-	this = setmetatable(this, Human) 
+	local this = global.core.GameObject.new(args) 
+	this = setmetatable(this, GameObjectsTemplate) 
 	
 	--===== init =====--
-	--this.args = args
+	if global.conf.particles > 0 then
+		--this.particleContainer = args.particleContainer or global.getState().raMain:addGO("DefaultParticleContainer", {selfDestroy = true, parent = this})
+		this.particleContainer = global.getState().pcDefaultParticleContainer
+	end
 	
-	this.ngeAttributes.usesAnimation = false
+	this.state = global.getState()
 	
 	--===== custom functions =====--
-	this.explode = global.expandFunction(function(this, speed)
-		local x, y = this:getPos()
-		local sx, sy = this:getSize()
-		x, y = x + sx / 2, y --+ sy / 2
-		
-		if this.particleContainer == nil then return end
-		
-		global.sfx.explosion(this.particleContainer, x, y, "Blood", args.stats.blood * global.conf.particles, args.stats.bloodPressure)
-		
-	end, this.explode or function() end)
 	
 	--===== default functions =====--
-	this.pStart = global.expandFunction(this.pStart, function(this)
-		
-	end)
+	this.pStart = function(this) 
+		global.run(this.start, this)
+	end
 	
-	this.pUpdate = global.expandFunction(this.pUpdate, function(this, dt, ra) 
+	this.pUpdate = function(this, dt, ra) 
+		local posX = this:getPos()
 		
-	end)
-	
-	this.pDraw = global.expandFunction(this.pDraw, function(this, ra) 
+		if this.state.raMain:getFOV() > posX + this.ngeAttributes.sizeX then
+			this:destroy()
+			return
+		end
 		
-	end)
+		global.run(this.update, this, dt, ra)
+	end
 	
-	this.pClear = global.expandFunction(this.pClear, function(this, acctual) 
-		
-	end)
+	this.pDraw = function(this, ra) 
+		global.run(this.draw, this, ra)
+	end
 	
-	this.pStop = global.expandFunction(this.pStop, function(this) 
-		--this.particleContainer:destroy()
-	end)
+	this.pClear = function(this, acctual) 
+		global.run(this.clear, this, acctual)
+	end
+	
+	this.pStop = function(this) 
+		global.run(this.stop, this)
+	end
 	
 	return this
 end
 
-return Human
+return GameObjectsTemplate

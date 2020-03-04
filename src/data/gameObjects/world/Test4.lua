@@ -58,7 +58,7 @@ function GameObjectsTemplate.new(args)
 	
 	--===== default stuff =====--
 	--Inheritance from the GameObject main class.
-	local this = global.core.GameObject.new(args) 
+	local this = global.parent.Background.new(args) 
 	
 	--[[Not sure to be honest, 
 		I only know that this is necessary to declare a class/create an object (.^.)
@@ -72,6 +72,7 @@ function GameObjectsTemplate.new(args)
 	--this.to1 = global.parent.Test.new(args.posX)
 	
 	this.particleContainer = args.particleContainer
+	this.defaultParticleContainer = args.defaultParticleContainer
 	
 	--===== custom functions =====--
 	--[[Same as the function equevalent in the stateTemplate

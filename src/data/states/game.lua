@@ -18,13 +18,13 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.6"
+global.gameVersion = "v0.0.7"
 
 --===== shared vars =====--
 local game = {
 	stats = global.stats,
 	cameraOffsetX = 0,
-	cameraOffsetY = 0,
+	cameraOffsetY = 23,
 	ui = {},
 	ocui = {},
 	maxDistance = 0,
@@ -45,6 +45,8 @@ end
 function game.init()
 	print("[game]: Start init.")
 	
+	global.debugDisplayPosY = global.resY
+	
 	--===== debug =====--
 	--[[
 	package.loaded["libs/thirdParty/DoubleBuffering"] = nil
@@ -56,9 +58,14 @@ function game.init()
 	package.loaded["libs/ocal"] = nil
 	global.ocal = require("libs/ocal").initiate({oclrl = global.oclrl, db = global.db, libs = "libs/thirdParty"})
 	
+	
+	
 	package.loaded["libs/ocgf"] = nil
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
 	]]
+	global.worldHandler = nil
+	global.worldHandler = loadfile("data/global/worldHandler.lua")(global)
+	
 	--===== debug end =====--
 	
 	print("[game]: init done.")
@@ -95,17 +102,17 @@ function game.start()
 	})
 	]]
 	game.raMain = global.addRA({
-		posX = 15, 
+		posX = 1, 
 		posY = 1, 
-		sizeX = global.resX -30, 
-		sizeY = 20, 
+		sizeX = global.resX, 
+		sizeY = global.resY - 7, 
 		name = "RA1", 
-		drawBorders = true,
+		drawBorders = false,
 	})
-	
+	--[[
 	game.raTest = global.addRA({
 		posX = 2, 
-		posY = 22, 
+		posY = 23, 
 		sizeX = global.resX -2, 
 		sizeY = 20, 
 		name = "RA2", 
@@ -113,27 +120,35 @@ function game.start()
 		silent = true,
 		parent = game.raMain,
 	})
+	]]
+	
+	
 	
 	game.goPlayer = game.raMain:addGO("Player", {
 		posX = 10, 
 		posY = 13, 
 		layer = 4, 
 		name = "player", 
-		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
 		stats = game.stats,
 		eoy = -1,
 		eox = 2,
 	})
 	
-	game.pcExhaust = game.raMain:addGO("Exhaust", {
-		width = 2, 
-		height = 1, 
-		particle = "Smoke", 
-		parent = game.goPlayer,
-		smokeRate = 2 * global.conf.particles,
-	})
-	
-	game.pcDefaultParticleContainer = game.raMain:addGO("DefaultParticleContainer", {})
+	if global.conf.particles > 0 then
+		game.pcDefaultParticleContainer = game.raMain:addGO("DefaultParticleContainer", {})
+		game.goPlayer.particleContainer = game.pcDefaultParticleContainer
+		
+		game.pcExhaust = game.raMain:addGO("Exhaust", {
+			width = 2, 
+			height = 1, 
+			particle = "Smoke", 
+			parent = game.goPlayer,
+			smokeRate = 2 * global.conf.particles,
+			particleContainer = game.pcDefaultParticleContainer,
+		})
+	else
+		game.pcExhaust = {smokeRate = 0} --prevents crash caused by Player.lua if no pcExhaust is existing.
+	end
 	
 	global.worldHandler.start(game, 5, "test")
 	
@@ -168,12 +183,15 @@ function game.start()
 		
 	end
 	]]
-	
+	--game.goPlayer:addForce(20, 0)
 	--===== debug end =====--
 	
 end
 
 function game.update(dt)	
+	--game.goPlayer.driving = true
+	--global.event.pull("key_down")
+	
 	local x, y = game.goPlayer:getPos()
 	local speed = select(1, game.goPlayer:getSpeed())
 	

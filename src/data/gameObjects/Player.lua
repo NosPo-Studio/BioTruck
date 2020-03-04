@@ -37,10 +37,11 @@ function Player.new(args)
 	
 	this.startPosY = select(2, this:getPos())
 	this.line = args.line or 0
+	this.lastLine = this.line
 	this.momentum = 0
 	
 	this.driving = false
-	this.maxSmoke = 10
+	this.maxSmoke = 5
 	
 	this.state = global.getState()
 	
@@ -71,6 +72,7 @@ function Player.new(args)
 		local newLine = math.min(this.line +1, this.state.lines -1)
 		
 		if newLine ~= this.line then
+			this.lastLine = this.line
 			this.line = newLine
 		end
 	end
@@ -78,6 +80,7 @@ function Player.new(args)
 		local newLine = math.max(this.line -1, 0)
 		
 		if newLine ~= this.line then
+			this.lastLine = this.line
 			this.line = newLine
 		end
 	end

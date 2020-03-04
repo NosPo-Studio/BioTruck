@@ -5,6 +5,7 @@ local wh = {
 	biome,
 	posY,
 	lastStreetPosX = 0,
+	lastBackgroundPosX = 0,
 	lastBarrierPosX = {},
 	lastObjectPosX = {},
 	lastCalculatedX = 0,
@@ -25,9 +26,12 @@ end
 local function initBiomes()
 	for i, b in pairs(global.biome) do
 		if type(b) == "table" then
-			b.maxStreetChance, b.maxBarrierChance, b.maxFuelContainerChance = 0, 0, 0
+			b.maxStreetChance, b.maxBarrierChance, b.maxFuelContainerChance, b.maxBackgroundChance = 0, 0, 0, 0
 			for i, o in pairs(b.streets) do
 				b.maxStreetChance = b.maxStreetChance + o.chance
+			end
+			for i, o in pairs(b.backgrounds) do
+				b.maxBackgroundChance = b.maxBackgroundChance + o.chance
 			end
 			for i, o in pairs(b.barriers) do
 				b.maxBarrierChance = b.maxBarrierChance + o.chance
@@ -85,6 +89,28 @@ local function placeStreet(toX)
 		end
 	end
 end
+
+local function placeBackground(toX)
+	while wh.lastBackgroundPosX < toX do
+		print("[WH]: Adding background: X: " .. tostring(wh.lastBackgroundPosX))
+		local background = pickObject(wh.biome.maxBackgroundChance, wh.biome.backgrounds)
+		local go = wh.ra:addGO(background.name, {
+			posX = wh.lastBackgroundPosX, 
+			posY = wh.posY,
+			layer = 2,
+			name = "Background_" .. tostring(wh.createdStreets),
+		})
+		
+		if go ~= nil then
+			go:move(0, go.ngeAttributes.sizeY)
+			wh.lastBackgroundPosX = wh.lastBackgroundPosX + go.ngeAttributes.sizeX
+			wh.createdStreets = wh.createdStreets +1
+		else
+			global.warn("[WH]: Could not create Background: " .. tostring(background.name))
+		end
+	end
+end
+
 
 local function placeBarrier(fromX, toX)
 	local posX = fromX
@@ -153,6 +179,7 @@ end
 local function generateWorld(fromX, toX)	
 	toX = toX +3
 	placeStreet(toX)
+	placeBackground(toX)
 	placeBarrier(fromX, toX)
 	placeFuelContainer(fromX, toX)
 	

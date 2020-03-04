@@ -189,6 +189,15 @@ function GameObject.new(args)
 	this.detach = function(this)
 		this.gameObject:detach()
 	end
+	this.rerender = function(this)
+		for ra in pairs(this.ngeAttributes.responsibleRenderAreas) do
+			if ra.gameObjectAttributes[this] ~= nil then
+				ra.gameObjectAttributes[this].mustBeRendered = true
+			end
+		end
+		
+		this.ngeAttributes.hasMoved = true
+	end
 	
 	--===== engine functions =====--
 	this.ngeStart = function(this) --parent func 
@@ -259,9 +268,9 @@ function GameObject.new(args)
 		end
 		
 		if this.ngeAttributes.isParent then
-			global.run(this.pDraw, this, realArea, renderArea)
+			global.run(this.pDraw, this, realArea, offsetX, offsetY)
 		else
-			global.run(this.draw, this, realArea, renderArea)
+			global.run(this.draw, this, realArea, offsetX, offsetY)
 		end
 		
 		if realArea.gameObjectAttributes[this] == nil then --WIP: ToDo: Deeper problem?

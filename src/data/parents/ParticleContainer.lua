@@ -182,7 +182,6 @@ function ParticleContainer.new(args)
 		else
 			if this.parent ~= nil and this.parent.ngeAttributes.alive == false and this.selfDestroy then
 				this:destroy()
-				global.log("DEST")
 			end
 			this.newSizeX, this.newSizeY, this.lastMaxX, this.lastMaxY = 1, 1, 1, 1
 			move(this, this.moveToX, this.moveToY, this.newSizeX, this.newSizeY)

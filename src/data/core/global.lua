@@ -40,6 +40,8 @@ local global = {
 	resX = 0,
 	resY = 0,
 	
+	debugDisplayPosY = 1,
+	
 	--=== content ===--
 	state = {},
 	texture = {},

@@ -76,7 +76,7 @@ function GameObjectsTemplate.new(args)
 	
 	--===== default functions =====--
 	this.start = function(this) 
-		
+	
 	end
 	
 	this.update = function(this, dt, ra) 

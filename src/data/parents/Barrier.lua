@@ -41,8 +41,8 @@ function GameObjectsTemplate.new(args)
 	
 	--===== init =====--
 	if global.conf.particles > 0 then
-		this.particleContainer = args.particleContainer or global.getState().raMain:addGO("DefaultParticleContainer", {selfDestroy = true, parent = this})
-		this.defaultParticleContainer = args.defaultParticleContainer
+		--this.particleContainer = args.particleContainer or global.getState().raMain:addGO("DefaultParticleContainer", {selfDestroy = true, parent = this})
+		this.particleContainer = global.getState().pcDefaultParticleContainer
 	end
 	
 	this.stats = args.stats

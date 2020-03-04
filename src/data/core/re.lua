@@ -229,6 +229,7 @@ function re.init()
 end
 
 function re.draw()
+	print("[RE]: New frame: " .. tostring(global.currentFrame))
 	for ra in pairs(global.renderAreas) do
 		if ra.visible then
 			moveFrame(ra)
