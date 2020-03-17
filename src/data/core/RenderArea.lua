@@ -135,7 +135,7 @@ function RenderArea.new(args)
 			end
 		end
 	end
-	this.remGO = function(this, go)
+	this.remGO = function(this, go, t)
 		if go == nil then return false end
 		
 		if this.parent ~= nil then
@@ -143,6 +143,8 @@ function RenderArea.new(args)
 		else
 			print("[RA/" .. tostring(this.name) .. "]: Removing gameObject: \"" .. go.ngeAttributes.name .. "\" (#" .. tostring(id) .. ").")
 			
+			global.run(go.ngeStop, go)
+			this.toRender[go.ngeAttributes.layer][go] = nil			
 			this.gameObjectAttributes[go] = nil
 			
 			go:ngeClear(this)
@@ -152,9 +154,6 @@ function RenderArea.new(args)
 				go:ngeClear(c)
 				global.core.re.checkOverlapping(c, go, go.ngeAttributes.layer)
 			end
-			
-			--global.run(this.gameObjects[id].despawn)
-			global.run(go.ngeStop, go)
 			
 			this.gameObjects[go] = nil
 		end
@@ -184,9 +183,12 @@ function RenderArea.new(args)
 			a.mustBeRendered = true
 		end
 	end
-	
 	this.getFOV = function(this)
-		return - this.cameraPosX, this.sizeX - this.cameraPosX, - this.cameraPosY,this.sizeY - this.cameraPosY
+		local cmir = this.cameraMoveInstructions.raw
+		return - this.cameraPosX + cmir.x, this.sizeX - this.cameraPosX + cmir.x, - this.cameraPosY + cmir.y, this.sizeY - this.cameraPosY + cmir.y
+	end
+	this.getFOVLegacy = function(this)
+		return - this.cameraPosX, this.sizeX - this.cameraPosX, - this.cameraPosY, this.sizeY - this.cameraPosY
 	end
 	this.getLastFOV = function(this)
 		return - this.lastCameraPosX, this.sizeX - this.lastCameraPosX, - this.lastCameraPosY, this.sizeY - this.lastCameraPosY
@@ -314,12 +316,12 @@ function RenderArea.new(args)
 						add(2)
 					end
 				end
-				local function isInsideArea(ra, go, i)
+				local function isInsideArea(ra, go, i, leg)
 					local x, y = go:getPos()
 					local sx, sy = go.ngeAttributes.sizeX, go.ngeAttributes.sizeY
 					--local fromX, toX, fromY, toY = ra:getFOV()
 					
-					local fromX, toX, fromY, toY = this:getFOV()					
+					local fromX, toX, fromY, toY = this:getFOVLegacy()
 					if i == 1 and cmi.copy[5] < 0 then
 						fromX = fromX + this.sizeX - cmi.clear[i][3]
 					elseif i == 1 and cmi.copy[5] > 0 then

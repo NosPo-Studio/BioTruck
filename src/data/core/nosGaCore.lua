@@ -100,6 +100,7 @@ local function draw()
 	end
 	
 	if global.conf.useDoubleBuffering then
+		global.core.re.executeCopyOrders()
 		global.gpu.drawChanges()
 	end
 end
@@ -156,8 +157,8 @@ while global.isRunning do
 		end
 	end
 	
-	global.currentFrame = global.currentFrame +1
 	global.core.eventHandler.update()
+	global.currentFrame = global.currentFrame +1
 end
 
 progamEnd()

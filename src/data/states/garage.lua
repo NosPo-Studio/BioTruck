@@ -205,10 +205,12 @@ function garage.stop()
 	for i, go in pairs(garage.uiUpgrades) do
 		go:destroy()
 	end
-	if credits.raMain ~= nil then
+	if garage.raMain ~= nil then
 		global.remRA(garage.raMain)
 	end
-	garage.ocui:stop()
+	if garage.ocui ~= nil then
+		garage.ocui:stop()
+	end
 end
 
 return garage

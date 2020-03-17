@@ -21,6 +21,7 @@
 local global = ...
 local re = {
 	rendered = {},
+	copyInstructions = {},
 }
 
 --===== local vars =====--
@@ -148,6 +149,9 @@ local function moveFrame(renderArea)
 	if #renderArea.cameraMoveInstructions.copy > 0 then
 		local cmi = renderArea.cameraMoveInstructions
 		global.gpu.copy(cmi.copy[1], cmi.copy[2], cmi.copy[3], cmi.copy[4], cmi.copy[5], cmi.copy[6])
+		if global.conf.useDoubleBuffering then
+			table.insert(re.copyInstructions, {cmi.copy[1], cmi.copy[2], cmi.copy[3], cmi.copy[4], cmi.copy[5], cmi.copy[6]})
+		end
 		
 		global.oclrl:draw(0, 0, global.oclrl.generateTexture({
 			{"b", global.backgroundColor},
@@ -190,6 +194,9 @@ local function moveArea(renderArea)
 		asy = y2 - y1 +1
 		
 		global.gpu.copy(ax, ay, asx, asy, ci[5], ci[6])
+		if global.conf.useDoubleBuffering then
+			table.insert(re.copyInstructions, {ax, ay, asx, asy, ci[5], ci[6]})
+		end
 		
 		--global.log("t")
 	end
@@ -243,6 +250,15 @@ function re.draw()
 	end
 	for go in pairs(re.rendered) do
 		go:ngeSetLastPos()
+	end
+end
+
+function re.executeCopyOrders()
+	if global.conf.useDoubleBuffering then
+		for i, co in pairs(re.copyInstructions) do
+			global.realGPU.copy(co[1], co[2], co[3], co[4], co[5], co[6])
+		end
+		re.copyInstructions = {}
 	end
 end
 

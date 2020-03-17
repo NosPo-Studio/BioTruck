@@ -58,7 +58,7 @@ function Human.new(args)
 		
 		if this.particleContainer == nil then return end
 		
-		global.sfx.explosion(this.particleContainer, x, y, "Blood", args.stats.blood * global.conf.particles, args.stats.bloodPressure)
+		global.sfx.explosion(this.particleContainer, x, y, "Blood", args.stats.blood, args.stats.bloodPressure)
 		
 	end, this.explode or function() end)
 	

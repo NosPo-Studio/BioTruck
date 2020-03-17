@@ -15,7 +15,7 @@ function TestHuman.new(args)
 	args.sizeX = 6
 	args.sizeY = 6
 	args.components = {
-		{"Sprite", texture = global.texture.player.left}
+		{"Sprite", texture = "human"},
 	}
 	args.stats = {
 		life = .1,
@@ -23,6 +23,7 @@ function TestHuman.new(args)
 		fuel = 50,
 		blood = 10,
 		bloodPressure = 20,
+		money = 10,
 	}
 	
 	--===== default stuff =====--

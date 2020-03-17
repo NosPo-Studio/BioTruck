@@ -59,7 +59,7 @@ global.image = require("libs/thirdParty/image")
 
 print("useDoubleBuffering: " .. tostring(global.conf.useDoubleBuffering))
 if global.conf.useDoubleBuffering then
-	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true})
+	global.gpu = loadfile("libs/dbgpu_api.lua")({path = "libs/thirdParty", directDraw = false, forceDraw = false, rawCopy = true, actualRawCopy = false})
 	
 	global.db = require("libs/thirdParty/DoubleBuffering")
 else

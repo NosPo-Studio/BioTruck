@@ -10,7 +10,7 @@ return function(...)
 		
 		debugString = debugString .. 
 			"NosGa Engine: " .. global.version .. 
-			" | freeMemory: " .. tostring(math.floor((global.computer.freeMemory() /1024) +.5)) .. "KB" ..
+			" | MemoryUsage: " .. tostring(math.floor(100 - (global.computer.freeMemory() / global.computer.totalMemory() * 100) +.5)) .. "%" ..
 			" | FPS: " .. tostring(math.floor((global.fps) +.5) .. 
 			" | Frame: " .. tostring(global.currentFrame)
 		)

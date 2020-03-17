@@ -12,14 +12,8 @@ function Smoke.new(args)
 	--===== gameObject definition =====--
 	args = args or {}
 	args.name = "Smoke"
-	args.color = 0x0000000
+	args.color = 0x1e1e1e
 	args.lifeTime = pa(args.lt, args.lifeTime, args.maxLifeTime, 3)
-	
-	if math.random() > .5 then
-		args.lifeTime = math.max(args.lifeTime + math.random(pa(args.ltrng, args.lifeTimeRNG, 1) * 100) / 100, .2)
-	else
-		args.lifeTime = math.max(args.lifeTime - math.random(pa(args.ltrng, args.lifeTimeRNG, 1) * 100) / 100, .2)
-	end
 	
 	--===== default stuff =====--
 	local this = global.parent.Particle.new(args)
@@ -30,7 +24,7 @@ function Smoke.new(args)
 	
 	this.rng = pa(args.rng, args.wind, 20)
 	
-	this.gameObject:addRigidBody({g = -pa(args.heat, 20), speedLoss = 1})
+	this.gameObject:addRigidBody({g = pa(args.weight, 20), speedLoss = 1})
 	this.gameObject:addBoxCollider({y = .5, sx = 1, sy = .5})
 	
 	--this.name = pa(args.name, "Smoke")

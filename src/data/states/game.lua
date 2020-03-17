@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.7"
+global.gameVersion = "v0.0.9"
 
 --===== shared vars =====--
 local game = {
@@ -29,12 +29,15 @@ local game = {
 	ocui = {},
 	maxDistance = 0,
 	lines = 3,
-	streetWidth = 5,
+	streetWidth = 9,
+	
+	isResetting = false,
 }
 
 --===== local vars =====--
 local t = false
 local c = 0
+local transparencyColor = 0x00ffff
 
 --===== local functions =====--
 local function print(...)
@@ -58,13 +61,18 @@ function game.init()
 	package.loaded["libs/ocal"] = nil
 	global.ocal = require("libs/ocal").initiate({oclrl = global.oclrl, db = global.db, libs = "libs/thirdParty"})
 	
-	
+	]]
 	
 	package.loaded["libs/ocgf"] = nil
 	global.ocgf = dofile("libs/ocgf.lua").initiate({gpu = global.gpu, db = global.db, oclrl = global.oclrl, ocal = global.ocal})
-	]]
+	
 	global.worldHandler = nil
 	global.worldHandler = loadfile("data/global/worldHandler.lua")(global)
+	
+	global.gameObject.Player = nil
+	global.gameObject.Player = loadfile("data/gameObjects/Player.lua")(global)
+	
+	t1, t2 = nil, nil
 	
 	--===== debug end =====--
 	
@@ -83,6 +91,13 @@ function game.start()
 			animations = true,
 		},
 	})
+	
+	for i, c in pairs(global.texture) do
+		if c.format == "pic" then
+			global.makeImageTransparent(c, transparencyColor)
+		end
+	end
+	
 	global.clear()
 	
 	game.ocui = global.ocui.initiate(global.oclrl)
@@ -126,31 +141,18 @@ function game.start()
 	
 	game.goPlayer = game.raMain:addGO("Player", {
 		posX = 10, 
-		posY = 13, 
+		posY = 11, 
 		layer = 4, 
 		name = "player", 
 		stats = game.stats,
-		eoy = -1,
-		eox = 2,
 	})
 	
 	if global.conf.particles > 0 then
 		game.pcDefaultParticleContainer = game.raMain:addGO("DefaultParticleContainer", {})
 		game.goPlayer.particleContainer = game.pcDefaultParticleContainer
-		
-		game.pcExhaust = game.raMain:addGO("Exhaust", {
-			width = 2, 
-			height = 1, 
-			particle = "Smoke", 
-			parent = game.goPlayer,
-			smokeRate = 2 * global.conf.particles,
-			particleContainer = game.pcDefaultParticleContainer,
-		})
-	else
-		game.pcExhaust = {smokeRate = 0} --prevents crash caused by Player.lua if no pcExhaust is existing.
 	end
 	
-	global.worldHandler.start(game, 5, "test")
+	global.worldHandler.start(game, -7, "test")
 	
 	--===== debug =====--
 	--[[
@@ -279,6 +281,35 @@ function game.key_down(s)
 	end 
 	
 	
+end
+
+function game.reset()
+	global.worldHandler.reset()
+	
+	game.raMain:remGO(game.goPlayer)
+	
+	for go in pairs(game.raMain.gameObjects) do
+		if go.isIngameObject then
+			game.raMain:remGO(go)
+		end
+	end
+	
+	game.goPlayer = game.raMain:addGO("Player", {
+		posX = 10, 
+		posY = 11, 
+		layer = 4, 
+		name = "player", 
+		stats = game.stats,
+	})
+	
+	game.raMain:moveCameraTo(game.goPlayer:getPos() + game.cameraOffsetX, game.cameraOffsetY)
+	
+	global.worldHandler.start(game, -7, "test") --ToDo, bug: camera pos not updated instantly.
+	
+	game.isResetting = true
+end
+function game.ctrl_reset_key_down()
+	game.reset()
 end
 
 function game.ctrl_camLeft_key_pressed()

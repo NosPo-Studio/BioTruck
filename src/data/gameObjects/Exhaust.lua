@@ -1,13 +1,13 @@
 local global = ...
 
-ParticleTestContainer = {}
-ParticleTestContainer.__index = ParticleTestContainer
+Exhaust = {}
+Exhaust.__index = Exhaust
 
-function ParticleTestContainer.init(this) --will calles when the gameObject become loaded/reloaded.
-	--global.log("ParticleTestContainer: init")
+function Exhaust.init(this) --will calles when the gameObject become loaded/reloaded.
+	--global.log("Exhaust: init")
 end
 
-function ParticleTestContainer.new(args)
+function Exhaust.new(args)
 	--===== gameObject definition =====--
 	args = args or {}
 	--args.particle = "TestParticle2"
@@ -24,27 +24,31 @@ function ParticleTestContainer.new(args)
 		this = global.parent.ParticleContainer.new(args)
 	end
 	
-	this = setmetatable(this, ParticleTestContainer)
+	this = setmetatable(this, Exhaust)
 	
 	--===== init =====--
 	local pa = global.ut.parseArgs
 	
 	this.parent = args.parent
-	this.smokeRate = args.smokeRate or 2
+	this.smokeRate = global.ut.parseArgs(args.smokeRate, 2) * global.ut.parseArgs(global.conf.particles, 1)
 	this.particle = args.particle or "Smoke"
 	this.width = pa(args.width)
 	this.height = pa(args.height)
+	this.offsetX = pa(args.ox, args.offsetX, 0)
+	this.offsetY = pa(args.oy, args.offsetY, 0)
 	
 	this.pastTime = 0
 	
 	--===== global functions =====--
+	this.setSmokeRate = function(this, sr)
+		this.smokeRate = sr * global.ut.parseArgs(global.conf.particles, 1)
+	end
+	this.getSmokeRate = function(this)
+		return this.smokeRate
+	end
 	
 	--===== default functions =====--
 	this.start = function(this) --will called everytime a new object of the gameObject is created.
-		
-	end
-	
-	this.stop = function(this) --will called when gameObject object becomes deloaded (e.g. out of screen)
 		
 	end
 	
@@ -55,15 +59,16 @@ function ParticleTestContainer.new(args)
 		local toSpawn = math.floor(this.pastTime * this.smokeRate)
 		this.pastTime = this.pastTime - toSpawn / this.smokeRate
 		
-		
+		if this.pastTime ~= this.pastTime then 
+			this.pastTime = 0
+		end
 		
 		for c = 1, toSpawn do
 			--global.log(this.particle, x + this.parent.exhaustOffsetX, y + this.parent.exhaustOffsetY)
 			local rx, ry = math.random(this.width) -1, math.random(this.height) -1
 			
-			local particle = this:addParticle(this.particle, x + this.parent.exhaustOffsetX + rx, y + this.parent.exhaustOffsetY + ry)
+			local particle = this:addParticle(this.particle, x + this.offsetX + rx, y + this.offsetY + ry)
 			
-			--particle.gameObject:attach(this.parent.gameObject)
 			particle.gameObject:setSpeed(this.parent:getSpeed())
 		end
 	end
@@ -76,11 +81,11 @@ function ParticleTestContainer.new(args)
 		
 	end
 	
-	this.activate = function(this) --will called when the gameObject get activated by player or signal (not implemented yet).
+	this.stop = function(this) 
 		
 	end
 	
 	return this
 end
 
-return ParticleTestContainer
+return Exhaust

@@ -33,66 +33,19 @@ function GameObjectsTemplate.new(args)
 	--===== gameObject definition =====--
 	--Take given GameObject args if present and prevents it from being nil if not.
 	args = args or {} 
-	
-	args.sizeX = 11
-	args.sizeY = 5
-	args.components = { --Define the GameObjects components.
-		{"Sprite", 
-			x = 0, 
-			y = 0, 
-			texture = "barrier1",
-			--texture = "pipipu",
-		},
-		{"BoxCollider",
-			sx = args.sizeX,
-			sy = args.sizeY,
-		},
-	}
-	args.stats = {
-		life = 10,
-		hardness = 1,
-		fuel = 0,
-		dust = 6,
-		dustPressure = 10,
-	}
-	
+	args.isParent = true
 	
 	--===== default stuff =====--
-	local this = global.parent.Barrier.new(args) 
+	local this = global.core.GameObject.new(args) 
 	this = setmetatable(this, GameObjectsTemplate) 
 	
 	--===== init =====--
 	
 	--===== custom functions =====--
-	this.explode = function(this, speed)
-		local x, y = this:getPos()
-		local sx, sy = this:getSize()
-		x, y = x + sx / 2, y + sy / 2
-		
-		if this.particleContainer == nil then return end
-		
-		global.sfx.explosion(this.particleContainer, x, y, "Dust", args.stats.dust, args.stats.dustPressure)
-	end
 	
 	--===== default functions =====--
-	this.start = function(this) 
-	
-	end
-	
-	this.update = function(this, dt, ra) 
-		
-	end
-	
-	this.draw = function(this) 
-	
-	end
-	
-	this.clear = function(this, acctual) 
-		
-	end
-	
-	this.stop = function(this) 
-		
+	this.pStart = function(this) 
+		global.log("T1")
 	end
 	
 	return this

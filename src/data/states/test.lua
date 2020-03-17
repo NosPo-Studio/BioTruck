@@ -84,41 +84,9 @@ function test.start()
 	})
 	test.ra2 = global.addRA({posX = 59, posY = 3, sizeX = 55, sizeY = 20, name = "TRA2", drawBorders = true, parent = test.raMain})
 	
-	test.goPlayer = test.raMain:addGO("Player", {
-		posX = 10, 
-		posY = 13, 
-		layer = 4, 
-		name = "player", 
-		particleContainer = test.raMain:addGO("DefaultParticleContainer", {}),
-		stats = global.stats,
-		eoy = -1,
-		eox = 2,
-	})
-	
-	test.pcExhaust = test.raMain:addGO("Exhaust", {
-		width = 2, 
-		height = 1, 
-		particle = "Smoke", 
-		parent = test.goPlayer,
-		smokeRate = 2 * global.conf.particles,
-	})
-	
-	test.goHuman = test.raMain:addGO("TestHuman", {
-		posX = 30, 
-		posY = 13, 
-		layer = 4, 
-		name = "human", 
-		particleContainer = test.raMain:addGO("DefaultParticleContainer", {}),
-	})
-	
-	
-	
-	--test.goPlayer.drive = true
-	--test.goPlayer:addForce(20, 0)
-	
-	--test.goHuman:collide(1000, 0)
-	
-	--global.sfx.explosion(test.raMain:addGO("DefaultParticleContainer", {}), 20, 10, "Smoke", 40, 10)
+	--test.goTest = test.raMain:addGO("Test", {x = 0, y = 0})
+	test.goTest2 = test.raMain:addGO("Test2", {x = 10, y = 5})
+	test.goTest3 = test.raMain:addGO("Test2", {x = 15, y = 10})
 	
 	--===== debug end =====--
 	
@@ -169,17 +137,25 @@ function test.draw()
 	
 	--global.gpu:drawChanges()
 	
-	global.drawDebug()
+	global.drawDebug(test.raMain:getFOV())
 end
 
 function test.key_down(s)
 	if s[4] == 28 and global.isDev then
 		print("--===== EINGABE =====--")
 		
-		if true then
+		if false then
 			global.realGPU.setBackground(0x000000)
 			global.term.clear()
 		end
+		
+		global.log(test.raMain:getFOV())
+		test.raMain:moveCamera(10, -10)
+		global.log(test.raMain:getFOV())
+		test.raMain:moveCameraTo(0, 0)
+		global.log(test.raMain:getFOV())
+		test.raMain:moveCamera(-10, 10)
+		global.log(test.raMain:getFOV())
 		
 		--test.goTest3:detach()
 		--test.goTest3:setSpeed(10, 0)

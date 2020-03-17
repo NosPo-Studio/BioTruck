@@ -57,6 +57,7 @@ local dbgpu = {
 	directDraw = parseArgs(args.directDraw, true),
 	forceDraw = parseArgs(args.forceDraw, false),
 	rawCopy = parseArgs(args.rawCopy, false),
+	actualRawCopy = parseArgs(args.actualRawCopy, args.rawCopy),
 	version = version,
 	buffer = buffer,
 }
@@ -109,7 +110,7 @@ function dbgpu.copy(x, y, sx, sy, tx, ty)
 		buffer.paste(tx +x, ty +y, data, rawData)
 	end
 	
-	if dbgpu.rawCopy then		
+	if dbgpu.rawCopy and dbgpu.actualRawCopy then		
 		gpu.copy(x, y, sx, sy, tx, ty)
 	end	
 	draw()

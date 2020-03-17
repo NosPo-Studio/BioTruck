@@ -71,9 +71,6 @@ function Particle.new(args)
 		
 		global.run(this.update, this, dt, ra, particles, particleGameObjects)
 		
-		local x, y = this.gameObject:getPos()
-		local lx, ly = this.gameObject:getLastPos()
-		
 		return this.gameObject:getPos()
 	end
 	

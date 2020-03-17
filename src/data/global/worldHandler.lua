@@ -84,6 +84,7 @@ local function placeStreet(toX)
 		if go ~= nil then
 			wh.lastStreetPosX = wh.lastStreetPosX + go.ngeAttributes.sizeX
 			wh.createdStreets = wh.createdStreets +1
+			go.isIngameObject = true
 		else
 			global.warn("[WH]: Could not create Street: " .. tostring(street.name))
 		end
@@ -105,6 +106,7 @@ local function placeBackground(toX)
 			go:move(0, go.ngeAttributes.sizeY)
 			wh.lastBackgroundPosX = wh.lastBackgroundPosX + go.ngeAttributes.sizeX
 			wh.createdStreets = wh.createdStreets +1
+			go.isIngameObject = true
 		else
 			global.warn("[WH]: Could not create Background: " .. tostring(background.name))
 		end
@@ -133,9 +135,13 @@ local function placeBarrier(fromX, toX)
 				})
 				
 				if object ~= nil then
+					local sx, sy = object:getSize()
+					
 					wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
 					wh.lastBarrierPosX[i] = posX + object.ngeAttributes.sizeX
 					wh.createdBarriers = wh.createdBarriers +1
+					object:move(0, -(wh.game.streetWidth - sy - 3) / 2)
+					object.isIngameObject = true
 				else
 					global.warn("[WH]: Could not create Barrier: " .. tostring(barrier.name))
 				end
@@ -165,8 +171,13 @@ local function placeFuelContainer(fromX, toX)
 				})
 				
 				if object ~= nil then
+					local sx, sy = object:getSize()
+					
 					wh.lastObjectPosX[i] = posX + object.ngeAttributes.sizeX
 					wh.createdFuleContainers = wh.createdFuleContainers +1
+					
+					object:move(0, -(wh.game.streetWidth - sy - 3) / 2)
+					object.isIngameObject = true
 				else
 					global.warn("[WH]: Could not create FuleContainer: " .. tostring(fuelContainer.name))
 				end
@@ -193,22 +204,33 @@ function wh.start(game, y, biome)
 	wh.game = game
 	wh.ra = game.raMain
 	wh.posY = y
+	wh.biome = global.biome[biome]
 	local fromX, toX = wh.ra:getFOV()
 	
 	for i = 1, game.lines do
 		wh.lastBarrierPosX[i] = 0
-		wh.lastObjectPosX[i] = 0
+		wh.lastObjectPosX[i] = wh.game.goPlayer:getSize() + wh.biome.barrierGaps
 	end
 	
-	wh.biome = global.biome[biome]
-	
 	generateWorld(fromX +20, toX)
-	
 end
 
 function wh.update()
 	local fromX, toX = wh.ra:getFOV()
 	generateWorld(wh.lastCalculatedX, toX)
+end
+
+function wh.reset()
+	wh.lastStreetPosX = 0
+	wh.lastBackgroundPosX = 0
+	wh.lastBarrierPosX = {}
+	wh.lastObjectPosX = {}
+	wh.lastCalculatedX = 0
+	wh.lastGapX = 0
+	wh.lastGapY = 0
+	wh.createdStreets = 0
+	wh.createdBarriers = 0
+	wh.createdFuleContainers = 0
 end
 
 function wh.stop()

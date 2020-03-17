@@ -12,13 +12,13 @@ function Smoke.new(args)
 	--===== gameObject definition =====--
 	args = args or {}
 	args.name = "Smoke"
-	args.color = 0x0000000
-	args.lifeTime = pa(args.lt, args.lifeTime, args.maxLifeTime, 3)
+	args.color = 0xffb600
+	args.lifeTime = pa(args.lt, args.lifeTime, args.maxLifeTime, 1)
 	
 	if math.random() > .5 then
-		args.lifeTime = math.max(args.lifeTime + math.random(pa(args.ltrng, args.lifeTimeRNG, 1) * 100) / 100, .2)
+		args.lifeTime = math.max(args.lifeTime + math.random(pa(args.ltrng, args.lifeTimeRNG, .5) * 100) / 100, .2)
 	else
-		args.lifeTime = math.max(args.lifeTime - math.random(pa(args.ltrng, args.lifeTimeRNG, 1) * 100) / 100, .2)
+		args.lifeTime = math.max(args.lifeTime - math.random(pa(args.ltrng, args.lifeTimeRNG, .5) * 100) / 100, .2)
 	end
 	
 	--===== default stuff =====--

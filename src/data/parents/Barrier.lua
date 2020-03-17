@@ -52,19 +52,22 @@ function GameObjectsTemplate.new(args)
 	
 	--===== custom functions =====--
 	this.collide = function(this, damage, speedX)
-		local fuel = 0
+		local fuel, money = 0, 0
 		local backDamage = damage - math.max(damage - this.life, 0)
-		backDamage = backDamage / damage
+		if damage > 0 then
+			backDamage = backDamage / damage
+		end
 		
 		this.life = this.life - damage
 		
 		if this.life <= 0 then
 			fuel = this.stats.fuel
+			fuel = this.stats.money or 0
 			this:explode(speedX)
 			this:destroy()
 		end
 		
-		return backDamage * this.stats.hardness, backDamage, fuel
+		return backDamage * this.stats.hardness, backDamage, fuel, money
 	end
 	
 	--===== default functions =====--

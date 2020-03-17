@@ -6,6 +6,7 @@ local function getForce(force, angle)
 end
 
 return function(pc, x, y, particle, particleAmount, force, args)
+	particleAmount = particleAmount * global.ut.parseArgs(global.conf.particles, 1)
 	local angleSteps = 360 / particleAmount
 	for c = 1, particleAmount do
 		local fx, fy = getForce(force, angleSteps * c)

@@ -10,7 +10,7 @@ local nosGaConf = {
 	maxTickTime = .5, --if a tick need more as the maxTickTime the engine will handle the ticke like it had needs exacly the maxTickTime.
 	fpsCheckInterval = 20, --defines what amout of frames the engine use to calculate the avg. fps.
 	
-	showConsole = false, --can be changes ingame by pressing f1 by default.
+	showConsole = true, --can be changes ingame by pressing f1 by default.
 	showDebug = true, --can be changes ingame by pressing f3 by default.
 	consoleSizeY = 5, --the height of the console.
 	directConsoleDraw = false, --instant drawing console outputs instead of waiting til new frame (has only an affect if doubleBuffering used) (only if isDev).
@@ -57,8 +57,8 @@ local nosGaConf = {
 			re = false, 
 			uh = false,
 			eh = false,
-			GameObject = true,
-			RenderArea = false,
+			GameObject = false,
+			RenderArea = true,
 			
 			--=== data groups ===--
 			global = false, --global dir.
@@ -66,7 +66,7 @@ local nosGaConf = {
 			states = false,
 			textures = false,
 			animations = false,
-			parents = true,
+			parents = false,
 			gameObjects = true,
 			structuredGameObjects = false,
 			

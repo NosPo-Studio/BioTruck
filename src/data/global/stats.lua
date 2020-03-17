@@ -20,8 +20,9 @@ local stats = {
 	fuelTank = 20,
 	startFuel = 300,
 	fuelConsumption = 1,
-	armor = 10,
-	life = 10,
+	--armor = 20,
+	armor = 0,
+	life = 30,
 	damage = 1,
 }
 

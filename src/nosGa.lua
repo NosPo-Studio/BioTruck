@@ -76,6 +76,9 @@ SOFTWARE.
 			Graphic isures on RenderArea leaving GameObjects.
 	
 	ToDo:	
+		GameObject:
+			Add automatic "global.extentFunction" functuinality to parents (pUpdate...).
+		
 		oclrl:
 			Add calculateSize(texture) function.
 		
