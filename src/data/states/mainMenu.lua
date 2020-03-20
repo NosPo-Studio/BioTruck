@@ -178,7 +178,12 @@ function mainMenu.key_down(s)
 end
 
 function mainMenu.stop()
-	
+	if mainMenu.raMain ~= nil then
+		global.remRA(mainMenu.raMain)
+	end
+	if mainMenu.ocui ~= nil then
+		mainMenu.ocui:stop()
+	end
 end
 
 return mainMenu

@@ -217,6 +217,11 @@ function global.loadData(target, dir, func, logFuncs, overwrite, subDirs, struct
 				target[name or string.sub(p, 0, #p -1)] = suc
 			end
 			
+			local obj = target[name or string.sub(p, 0, #p -1)]
+			if type(obj) == "table" then
+				global.run(obj.init, obj)
+			end
+			
 			if func ~= nil then
 				func(name, id)
 			end

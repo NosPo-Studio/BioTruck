@@ -32,6 +32,9 @@ function Player.new(args)
 	this.life = this.stats.life
 	this.armor = this.stats.armor
 	
+	this.fuelEarned = 0
+	this.moneyEarned = 0
+	
 	this.startPosY = select(2, this:getPos())
 	this.line = args.line or 0
 	this.lastLine = this.line
@@ -49,6 +52,8 @@ function Player.new(args)
 	this.fullDamageFire = 14
 	this.isExploded = false
 	
+	this.fullDamageSlowDown = 5
+	
 	this.state = global.getState()
 	
 	this.gameObject:addBoxCollider({sx = args.sizeX, sy = args.sizeY, lf = function(_, gameObject)
@@ -59,10 +64,12 @@ function Player.new(args)
 		local backDamage, speedLoss, fuel, money = barrier:collide(damage, speedX)
 		
 		this.fuel = math.min(this.fuel + fuel, this.stats.fuelTank)
+		this.fuelEarned = this.fuelEarned + fuel
+		this.moneyEarned = this.moneyEarned + money
+		global.stats.player.money = global.stats.player.money + money
 		
 		this.life = this.life - math.max(math.floor(speedX) * backDamage / math.max(this.armor, 1), 0)
 		this.armor = this.armor - math.floor(speedX) * backDamage
-		global.stats.player.money = global.stats.player.money + money
 		
 		this.momentumX = this.momentumX + speedX * (1 - math.min(speedLoss, 1))
 		this.momentumY = this.momentumY + speedY * (1 - math.min(speedLoss, 1))
@@ -135,7 +142,7 @@ function Player.new(args)
 	
 	--===== default functions =====--
 	this.start = function(this) --will called everytime a new object of the gameObject is created.
-		
+		--this.life = 0 --debug
 	end
 	
 	this.update = function(this, dt, ra) --will called on every game tick.
@@ -187,8 +194,8 @@ function Player.new(args)
 			x, y = x + pc.offsetX + pc.width / 2, y + pc.offsetY + pc.height / 2
 			
 			
-			global.sfx.explosion(pc, x, y, "Smoke", this.explosionSmoke, this.explosionForce, {lt = 5, ltrng = 3})
-			global.sfx.explosion(pc, x, y, "Fire", this.explosionFire, this.explosionForce, {lt = 3, ltrng = 1.5})
+			global.sfx.explosion(pc, x, y, "Smoke", this.explosionSmoke, this.explosionForce, {lt = 5, ltrng = 3, fx = speedX / 2})
+			global.sfx.explosion(pc, x, y, "Fire", this.explosionFire, this.explosionForce, {lt = 3, ltrng = 1.5, fx = speedX / 2})
 			
 			this.pcDamageSmoke:setSmokeRate(this.fullDamageSmoke)
 			this.pcDamageFire:setSmokeRate(this.fullDamageFire)
@@ -199,8 +206,6 @@ function Player.new(args)
 			this.pcDamageFire:setSmokeRate(this.maxDamageFire * (1 - this.life / this.stats.life))
 		end
 		
-		
-		
 		if this.driving then
 			this.fuel = math.max(this.fuel - this.stats.fuelConsumption * global.dt, 0)
 		
@@ -210,6 +215,10 @@ function Player.new(args)
 			else
 				this.pcExhaust:setSmokeRate(0)
 			end	
+		end
+		
+		if this.life <= 0 and speedX > 0 then
+			this:addForce(-this.fullDamageSlowDown * dt, 0)
 		end
 		
 		this.gameObject:playAnimation(select(1, this:getSpeed() /2))
@@ -229,9 +238,11 @@ function Player.new(args)
 	end
 	
 	this.stop = function(this) --will called when gameObject object becomes deloaded (e.g. out of screen)
-		this.state.raMain:remGO(this.pcExhaust)
-		this.state.raMain:remGO(this.pcDamageSmoke)
-		this.state.raMain:remGO(this.pcDamageFire)
+		if global.conf.particles > 0 then
+			this.state.raMain:remGO(this.pcExhaust)
+			this.state.raMain:remGO(this.pcDamageSmoke)
+			this.state.raMain:remGO(this.pcDamageFire)
+		end
 	end
 	
 	return this

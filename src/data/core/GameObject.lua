@@ -210,13 +210,18 @@ function GameObject.new(args)
 	this.ngeUpdate = function(this, gameObjects, dt, ra) --parent func
 		local ocgfGameObjects = {}
 		for go in pairs(gameObjects) do
-			table.insert(ocgfGameObjects, go.gameObject)
+			table.insert(ocgfGameObjects, go.gameObject) --PI
+		end
+		
+		if this.test then
+			--global.log(#ocgfGameObjects)
 		end
 		
 		this.ngeAttributes.clearedAlready = nil
 		
 		this.gameObject:updatePhx(ocgfGameObjects, dt)
 		this.gameObject:update(ocgfGameObjects)
+		
 		if this.ngeAttributes.isParent then
 			global.run(this.pUpdate, this, dt, ra, gameObjects, ocgfGameObjects)
 		else

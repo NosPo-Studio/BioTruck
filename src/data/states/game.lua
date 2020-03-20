@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.9"
+global.gameVersion = "v0.0.12"
 
 --===== shared vars =====--
 local game = {
@@ -31,7 +31,7 @@ local game = {
 	lines = 3,
 	streetWidth = 9,
 	
-	isResetting = false,
+	runIsRunning = true,
 }
 
 --===== local vars =====--
@@ -48,7 +48,10 @@ end
 function game.init()
 	print("[game]: Start init.")
 	
-	global.debugDisplayPosY = global.resY
+	--global.debugDisplayPosY = global.resY
+	global.debugDisplayPosY = global.resY - 6
+	
+	global.loadGame()
 	
 	--===== debug =====--
 	--[[
@@ -106,16 +109,7 @@ function game.start()
 	
 	game.ui.fuel = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = resY -5, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
 	game.ui.life = game.ocui.Bar.new(game.ocui, {posX = global.resX / 2 + 9, posY = resY -3, sizeX = global.resX / 2 - 10, sizeY = 1, clickable = false})
-	--[[
-	game.raMain = global.addRA({
-		posX = 1, 
-		posY = 8, 
-		sizeX = global.resX, 
-		sizeY = global.resY - global.conf.consoleSizeY -4, 
-		name = "RA1", 
-		drawBorders = true,
-	})
-	]]
+	
 	game.raMain = global.addRA({
 		posX = 1, 
 		posY = 1, 
@@ -124,20 +118,6 @@ function game.start()
 		name = "RA1", 
 		drawBorders = false,
 	})
-	--[[
-	game.raTest = global.addRA({
-		posX = 2, 
-		posY = 23, 
-		sizeX = global.resX -2, 
-		sizeY = 20, 
-		name = "RA2", 
-		drawBorders = true,
-		silent = true,
-		parent = game.raMain,
-	})
-	]]
-	
-	
 	
 	game.goPlayer = game.raMain:addGO("Player", {
 		posX = 10, 
@@ -152,45 +132,17 @@ function game.start()
 		game.goPlayer.particleContainer = game.pcDefaultParticleContainer
 	end
 	
-	global.worldHandler.start(game, -7, "test")
+	--global.worldHandler.start(game, -7, "test")
+	game.reset()
 	
 	--===== debug =====--
-	--[[
-	game.goBarrierTest = game.raMain:addGO("world/BarrierTest", {posX = 24, posY = 12, layer = 3, name = "goBarrierTest",
-		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
-		defaultParticleContainer = game.pcDefaultParticleContainer,
-	})
-	]]
-	--[[
-	game.goTest = game.raMain:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
-		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
-	})
 	
-	game.goTest = game.raMain:addGO("world/Test2", {posX = 24, posY = 6, layer = 3, maxSpeed = 20, name = "goTest",
-		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
-	})
-	game.goTest2 = game.raMain:addGO("world/Test3", {posX = 55, posY = 8, layer = 2, name = "goTest2"})
-	game.goTest3 = game.raMain:addGO("world/Test4", {posX = 6, posY = -3, layer = 2, name = "goTest3",
-		particleContainer = game.raMain:addGO("DefaultParticleContainer", {}),
-	})
-	]]
-	--[[
-	game.testGOs = {}
-	local amount = 10
-	local dis = 20
-	for c = 1, amount * dis, dis do
-		table.insert(game.testGOs, game.raMain:addGO("world/BarrierTest", {posX = 34 +c, posY = 12, layer = 3, name = "goBarrierTest",
-			defaultParticleContainer = game.pcDefaultParticleContainer,
-		}))
-		
-	end
-	]]
-	--game.goPlayer:addForce(20, 0)
 	--===== debug end =====--
 	
 end
 
 function game.update(dt)	
+	game.goPlayer.test = true
 	--game.goPlayer.driving = true
 	--global.event.pull("key_down")
 	
@@ -204,36 +156,16 @@ function game.update(dt)
 	
 	global.worldHandler.update()
 	
-	
-	if false then 
-		if c == 0 then
-			game.raMain:moveCameraTo(12, 0)
-			c = 1
-		elseif c == 1 then
-			--os.sleep(.5)
-			game.raMain:moveCameraTo(9, 0)
-			c = 2
-		end
+	if game.goPlayer.life <= 0 and game.runIsRunning then
+		game.runIsRunning = false
+	elseif not game.runIsRunning and game.goPlayer:getSpeed() <= 0 and game.goScoreScreen == nil then
+		game.goScoreScreen = game.raMain:addGO("ScoreScreen", {
+			money = game.goPlayer.moneyEarned,
+			fuel = game.goPlayer.fuelEarned,
+			distance = select(1, game.goPlayer:getPos()),
+			uiHeight = 7,
+		})
 	end
-	
-	
-	if false then
-		if t then
-			game.raMain:moveCamera(1, 0)
-			c = c +1
-			if c > 10 then
-				t = false
-			end
-		else
-			game.raMain:moveCamera(-1, 0)
-			c = c -1
-			if c < 0 then
-				t = true
-			end
-		end
-	end
-	
-	--game.raMain:moveCamera(1, 0)
 	
 	--print("=====New frame=====")
 	while game.pause do
@@ -271,22 +203,22 @@ function game.key_down(s)
 	if s[4] == 28 and global.isDev then
 		print("--===== EINGABE =====--")
 		
-		c = 0
-		
 		if true then
 			global.realGPU.setBackground(0x000000)
 			global.term.clear()
 		end
 		
 	end 
-	
-	
 end
 
 function game.reset()
+	global.saveGame()
+	
 	global.worldHandler.reset()
 	
 	game.raMain:remGO(game.goPlayer)
+	game.raMain:remGO(game.goScoreScreen)
+	game.goScoreScreen = nil
 	
 	for go in pairs(game.raMain.gameObjects) do
 		if go.isIngameObject then
@@ -306,21 +238,31 @@ function game.reset()
 	
 	global.worldHandler.start(game, -7, "test") --ToDo, bug: camera pos not updated instantly.
 	
-	game.isResetting = true
+	game.runIsRunning = true
 end
+
 function game.ctrl_reset_key_down()
 	game.reset()
 end
+function game.ctrl_garage_key_down(s, sname)
+	if not game.runIsRunning then
+		global.changeState("garage")
+	end
+end
 
 function game.ctrl_camLeft_key_pressed()
-	game.raTest:moveCamera(- 10 * global.dt, 0)
+	game.raMain:moveCamera(- 10 * global.dt, 0)
 end
 function game.ctrl_camRight_key_pressed()
-	game.raTest:moveCamera(10 * global.dt, 0)
+	game.raMain:moveCamera(10 * global.dt, 0)
 end
 
 function game.stop()
-	
+	if game.raMain ~= nil then
+		for go in pairs(game.raMain.gameObjects) do
+			game.raMain:remGO(go)
+		end
+	end
 end
 
 return game

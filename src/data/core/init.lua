@@ -43,6 +43,7 @@ end
 --===== global vars =====--
 --global.tl = require("libs/tl") --debug/testing
 global.fs = require("filesystem")
+global.filesystem = global.fs
 global.shell = require("shell")
 global.event = require("event")
 global.term = require("term")

@@ -53,6 +53,8 @@ function Particle.new(args)
 	
 	--===== default functions =====--
 	this.pStart = function(this) 
+		this.gameObject:addForce(pa(args.fx, args.forceX, 0), pa(args.fy, args.forceY, 0))
+		
 		global.run(this.start, this)
 	end
 	

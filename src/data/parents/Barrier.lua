@@ -62,7 +62,7 @@ function GameObjectsTemplate.new(args)
 		
 		if this.life <= 0 then
 			fuel = this.stats.fuel
-			fuel = this.stats.money or 0
+			money = this.stats.money or 0
 			this:explode(speedX)
 			this:destroy()
 		end

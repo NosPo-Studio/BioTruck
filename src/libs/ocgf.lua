@@ -215,22 +215,30 @@ end
 
 function OCGF.GameObject.addSprite(this, args)
 	args.x, args.y = posEqualizer(args, this.posX, this.posY)
-	table.insert(this.sprites, OCGF.Sprite.new(this, args))
+	local obj = OCGF.Sprite.new(this, args)
+	table.insert(this.sprites, obj)
+	return obj
 end
 
 function OCGF.GameObject.addBoxCollider(this, args)
 	args.x, args.y = posEqualizer(args, this.posX, this.posY)
 	args.isCollider = true
-	table.insert(this.boxCollider, OCGF.BoxTrigger.new(this, args))
+	local obj = OCGF.BoxTrigger.new(this, args)
+	table.insert(this.boxCollider, obj)
+	return obj
 end
 
 function OCGF.GameObject.addBoxTrigger(this, args)
 	args.x, args.y = posEqualizer(args, this.posX, this.posY)
-	table.insert(this.boxTrigger, OCGF.BoxTrigger.new(this, args))
+	local obj = OCGF.BoxTrigger.new(this, args)
+	table.insert(this.boxTrigger, obj)
+	return obj
 end
 
 function OCGF.GameObject.addRigidBody(this, args)
-	table.insert(this.rigidBodys, OCGF.RigidBody.new(this, args))
+	local obj = OCGF.RigidBody.new(this, args)
+	table.insert(this.rigidBodys, obj)
+	return obj
 end
 
 function OCGF.GameObject.onCollision(this, gameObject, selfCall)

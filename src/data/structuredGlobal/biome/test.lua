@@ -30,7 +30,6 @@ local testBiome = {
 		{name = "Test3",
 			chance = 1,
 		},
-		
 	},
 	
 	barriers = {

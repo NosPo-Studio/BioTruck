@@ -35,6 +35,8 @@ end
 function garage.init()
 	print("[garage]: Start init.")
 	
+	global.loadGame()
+	
 	--===== debug =====--
 	
 	--===== debug end =====--
@@ -54,7 +56,7 @@ function garage.start()
 		posX = 1, 
 		posY = 1, 
 		sizeX = global.resX, 
-		sizeY = global.resY - global.conf.consoleSizeY -2, 
+		sizeY = global.resY, 
 		name = "RA1", 
 		drawBorders = true,
 	})
@@ -62,15 +64,10 @@ function garage.start()
 	resX, resY = resX -1, resY -1
 	garage.ocui = global.ocui.initiate(global.oclrl)
 	local ui = garage.ocui
-	local buttonSizeX, buttonSizeY = 14, 3
+	local buttonSizeX, buttonSizeY = 30, 3
 	local buttons = 3
-	local posY = resY / 2 - buttons * (buttonSizeY + 1)
-	local colors = {
-		button = {
-			0x333333, 0x888888, 0x777777, 0xaaaaaa,
-		},
-		background = {0x777777, 0xaaaaaa,},
-	}
+	local posY = resY / 3 - buttons * (buttonSizeY + 1)
+	local colors = global.conf.colors
 	
 	global.clear()
 	
@@ -165,6 +162,21 @@ function garage.start()
 			global.changeState("mainMenu") 
 		end,
 	})
+	garage.bPlay = ui.Button.new(ui, {
+		x = resX - buttonSizeX - 1,
+		y = resY - buttonSizeY,
+		sx = buttonSizeX,
+		sy = buttonSizeY,
+		textures = {
+			global.getButtonTexture(buttonSizeX, buttonSizeY, 0x333333, 0x888888, "Play"),
+			global.getButtonTexture(buttonSizeX, buttonSizeY, 0x777777, 0xaaaaaa, "Play"),
+		},
+		lf = function() 
+			ui:draw()
+			global.db.drawChanges()
+			global.changeState("game") 
+		end,
+	})
 	
 	--===== debug =====--
 	
@@ -177,8 +189,8 @@ function garage.update(dt)
 end
 
 function garage.draw()
-	global.gpu.fill(global.resX / 2 - 3, 1, 10 + global.unicode.len(tostring(global.stats.player.money)), 3, " ")
-	global.gpu.set(global.resX / 2 - global.unicode.len(tostring(global.stats.player.money)) / 2, 2, "Money: " .. tostring(global.stats.player.money))
+	global.gpu.fill(global.resX / 2 - 2 - global.unicode.len(tostring(global.stats.player.money)) / 2, 2, 11 + global.unicode.len(tostring(global.stats.player.money)), 3, " ")
+	global.gpu.set(global.resX / 2 - global.unicode.len(tostring(global.stats.player.money)) / 2, 3, "Money: " .. tostring(global.stats.player.money))
 	
 	garage.ocui:draw()
 	
@@ -202,10 +214,11 @@ function garage.key_down(s)
 end
 
 function garage.stop()
-	for i, go in pairs(garage.uiUpgrades) do
-		go:destroy()
-	end
+	global.saveGame()
 	if garage.raMain ~= nil then
+		for go in pairs(garage.raMain.gameObjects) do
+			go:destroy()
+		end
 		global.remRA(garage.raMain)
 	end
 	if garage.ocui ~= nil then

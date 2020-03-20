@@ -277,6 +277,9 @@ function re.test()
 	end
 end
 
+re.calculateRenderArea = function() end
+re.checkOverlapping = function() end
+
 re.calculateRenderArea = calculateFrame
 re.checkOverlapping = checkOverlapping	
 

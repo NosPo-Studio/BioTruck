@@ -25,22 +25,22 @@ function Player.new(args)
 	
 	this.stat = args.stat
 	this.colors = args.colors
+	this.basePrice = args.basePrice or 10
+	this.priceIncrease = args.priceIncrease or 10
+	this.price = this.basePrice + global.stats.player[this.stat] * this.priceIncrease
 	
 	this.button = ui.Button.new(ui, {
 		x = args.posX,
 		y = args.posY,
 		sx = args.buttonSizeX,
 		sy = args.buttonSizeY,
-		textures = {
-			global.getButtonTexture(args.buttonSizeX, args.buttonSizeY, this.colors.button[1], this.colors.button[2], args.statName),
-			global.getButtonTexture(args.buttonSizeX, args.buttonSizeY, this.colors.button[3], this.colors.button[4], args.statName),
-		},
+		textures = {},
 		lf = function() 
-			if global.stats.player.money > 0 then
+			if global.stats.player.money - this.price > 0 then
 				global.stats.player[this.stat] = global.stats.player[this.stat] +1
-				global.log(global.stats.player[this.stat])
 				this.ngeAttributes.hasMoved = true
-				global.stats.player.money = global.stats.player.money -1
+				global.stats.player.money = global.stats.player.money - this.price
+				this.price = this.basePrice + global.stats.player[this.stat] * this.priceIncrease
 			end
 		end,
 	})
@@ -50,7 +50,10 @@ function Player.new(args)
 	
 	--===== default functions =====--
 	this.update = function(this, dt, ra) --will called on every game tick.
+		local buttonText = args.statName .. " ($" .. tostring(this.price) .. ")"
 		
+		this.button.texture0 = global.getButtonTexture(args.buttonSizeX, args.buttonSizeY, this.colors.button[1], this.colors.button[2], buttonText)
+		this.button.texture1 = global.getButtonTexture(args.buttonSizeX, args.buttonSizeY, this.colors.button[3], this.colors.button[4], buttonText)
 	end
 	
 	this.draw = function(this)

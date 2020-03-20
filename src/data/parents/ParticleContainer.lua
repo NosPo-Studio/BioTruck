@@ -102,6 +102,7 @@ function ParticleContainer.new(args)
 			particle = global.gameObject[particle]
 		end
 		particle = particle.new(args)
+		global.run(particle.pStart, particle)
 		
 		print("[PC][" .. tostring(this.name) .. "]: Adding particle: " .. tostring(particle.name) .. ", X: " ..tostring(x) .. ", Y: " .. tostring(y) .. ", F: " .. tostring(global.currentFrame))
 		
