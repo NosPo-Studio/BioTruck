@@ -53,8 +53,6 @@ function Particle.new(args)
 	
 	--===== default functions =====--
 	this.pStart = function(this) 
-		this.gameObject:addForce(pa(args.fx, args.forceX, 0), pa(args.fy, args.forceY, 0))
-		
 		global.run(this.start, this)
 	end
 	
@@ -73,6 +71,9 @@ function Particle.new(args)
 		
 		global.run(this.update, this, dt, ra, particles, particleGameObjects)
 		
+		local x, y = this.gameObject:getPos()
+		local lx, ly = this.gameObject:getLastPos()
+		
 		return this.gameObject:getPos()
 	end
 	
@@ -87,7 +88,6 @@ function Particle.new(args)
 				local x, y = this.gameObject:getPos()
 				x = math.floor(x +offsetX +.5)
 				y = math.floor((y +offsetY) *2 +.5)
-				--global.log(x, y)
 				global.db.semiPixelSet(x, y, this.color)
 			elseif type == 2 then
 				local x, y = this.gameObject:getPos()

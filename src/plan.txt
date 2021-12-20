@@ -1,3 +1,12 @@
+EventHandelr:
+	Add: prcise mode (sub puixel touch) support.
+
+Performance:
+	Objects on the street can only collide with the player.
+	
+	GameObjects:
+		Collision white list.
+
 Car:
 	Ice Truck
 	Scale: 35x16 px, height.

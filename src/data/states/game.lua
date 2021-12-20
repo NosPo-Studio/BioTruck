@@ -18,7 +18,7 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.12"
+global.gameVersion = "v0.0.13"
 
 --===== shared vars =====--
 local game = {
@@ -255,6 +255,10 @@ function game.ctrl_camLeft_key_pressed()
 end
 function game.ctrl_camRight_key_pressed()
 	game.raMain:moveCamera(10 * global.dt, 0)
+end
+
+function game.touch()
+	
 end
 
 function game.stop()

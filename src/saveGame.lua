@@ -1,1 +1,1 @@
-{traction=5,damage=1,tank=3,money=999995200,speed=12,armor=15,fuelConsuption=22,life=18}
+{damage=1,tank=3,traction=5,life=18,money=1000010100,speed=12,fuelConsuption=22,armor=15}

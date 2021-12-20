@@ -27,7 +27,7 @@ local specialPressedKeys = {}
 --===== local functions =====--
 local function print(...)
 	if global.conf.debug.ehDebug then
-		global.debug(...)
+		global.debug.log(...)
 	end
 end
 
@@ -78,7 +78,6 @@ end
 
 local function parseSignal(signal)
 	if #signal == 0 then return false end
-	
 	if global.tiConsole.status == true then
 		if signal[1] == "key_down" or signal[1] == "key_up" then
 			return true
@@ -237,5 +236,7 @@ function eh.stop()
 	pressedKeys = {}
 	specialPressedKeys = {}
 end
+
+eh.parseSignal = parseSignal
 
 return eh

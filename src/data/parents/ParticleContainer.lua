@@ -65,6 +65,10 @@ function ParticleContainer.new(args)
 	args.sizeY = 1
 	args.solid = false
 	
+	args.components = {
+		{"Sprite", posX = 0, posY = 0, texture = global.oclrl.generateTexture({})},
+	}
+	
 	--===== default stuff =====--
 	local this = global.core.GameObject.new(args) 
 	this = setmetatable(this, ParticleContainer) 
@@ -75,8 +79,6 @@ function ParticleContainer.new(args)
 	this.type = args.type
 	this.useCollision = pa(args.uc, args.useCollision, false)
 	this.particleSizeX = 1
-	this.selfDestroy = pa(args.sd, args.selfDestroy, false)
-	this.parent = args.parent
 	
 	if this.type == 2 then
 		this.particleSizeX = 2
@@ -102,7 +104,6 @@ function ParticleContainer.new(args)
 			particle = global.gameObject[particle]
 		end
 		particle = particle.new(args)
-		global.run(particle.pStart, particle)
 		
 		print("[PC][" .. tostring(this.name) .. "]: Adding particle: " .. tostring(particle.name) .. ", X: " ..tostring(x) .. ", Y: " .. tostring(y) .. ", F: " .. tostring(global.currentFrame))
 		
@@ -181,9 +182,6 @@ function ParticleContainer.new(args)
 			this.lastMaxX = maxX
 			this.lastMaxY = maxY
 		else
-			if this.parent ~= nil and this.parent.ngeAttributes.alive == false and this.selfDestroy then
-				this:destroy()
-			end
 			this.newSizeX, this.newSizeY, this.lastMaxX, this.lastMaxY = 1, 1, 1, 1
 			move(this, this.moveToX, this.moveToY, this.newSizeX, this.newSizeY)
 		end
@@ -202,7 +200,6 @@ function ParticleContainer.new(args)
 		
 		this.ngeAttributes.clearedAlready = true
 		--move(this, this.moveToX, this.moveToY, this.newSizeX, this.newSizeY)
-		
 	end
 	
 	this.pDraw = function(this, renderArea) 

@@ -30,7 +30,7 @@ local uh = {
 --===== local functions =====--
 local function print(...)
 	if global.conf.debug.geDebug then
-		global.debug(...)
+		global.debug.log(...)
 	end
 end
 
