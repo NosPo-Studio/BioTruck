@@ -33,12 +33,11 @@ function ScoreScreen.new(args)
 	
 	--===== gameObject definition =====--
 	args = args or {}
-	args.sizeX = 80
-	args.sizeY = 7
+	args.sizeX = 40
+	args.sizeY = 8
 	
 	local text = {
-		reset = "To reset press: " .. ScoreScreen.controls.reset .. ".",
-		garage = "To go to garage press: " .. ScoreScreen.controls.garage .. ".",
+		reset = "To reset press: " .. ScoreScreen.controls.reset,
 	}
 	
 	args.components = {
@@ -47,9 +46,14 @@ function ScoreScreen.new(args)
 			{"f", global.conf.colors.background[2]},
 			
 			{0, 0, args.sizeX, args.sizeY, " "},
+
+			{0, 0, args.sizeX, 1, "#"},
+			{0, args.sizeY -1, args.sizeX, 1, "#"},
+			{0, 0, 1, args.sizeY, "#"},
+			{args.sizeX, 0, 1, args.sizeY, "#"},
 			
-			{2, args.sizeY -2, text.reset},
-			{args.sizeX - len(text.garage) - 2, args.sizeY -2, text.garage},
+			
+			--{args.sizeX / 2 - len(text.reset) / 2, args.sizeY -2, text.reset},
 		})},
 	}
 	args.posX = 0
@@ -67,20 +71,26 @@ function ScoreScreen.new(args)
 	this.money = args.money
 	this.fuel = args.fuel
 	this.distance = args.distance
+	this.score = args.score
+	this.player = args.player
 	
 	local text = {
-		money = "Money earned: " .. tostring(this.money) .. ", total money: " .. tostring(global.stats.player.money),
+		player = "Player: " .. tostring(this.player),
+		money = "Money earned: " .. tostring(this.money), -- .. ", total money: " .. tostring(global.stats.player.money),
 		fuel = "Fuel earned: " .. tostring(this.fuel),
 		distance = "Distance traveled: " .. tostring(this.distance),
+		score = "Score: " .. tostring(this.score),
 	}
 	
 	this.gameObject:addSprite({x = 0, y = 0, texture = global.oclrl.generateTexture({
 		{"b", global.conf.colors.background[1]},
 		{"f", global.conf.colors.background[2]},
 		
-		{args.sizeX / 2 - len(text.money) / 2, 1, text.money},
-		{args.sizeX / 2 - len(text.fuel) / 2, 2, text.fuel},
-		{args.sizeX / 2 - len(text.distance) / 2, 3, text.distance},
+		{args.sizeX / 2 - len(text.player) / 2, 1, text.player},
+		{args.sizeX / 2 - len(text.money) / 2, 2, text.money},
+		{args.sizeX / 2 - len(text.fuel) / 2, 3, text.fuel},
+		{args.sizeX / 2 - len(text.distance) / 2, 4, text.distance},
+		{args.sizeX / 2 - len(text.score) / 2, 5, text.score},
 	})})
 	
 	--this.menu:add({this.bRestart, 3, 3})

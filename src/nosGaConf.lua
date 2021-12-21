@@ -56,13 +56,13 @@ local nosGaConf = {
 			conf = true, --should be always true.
 			
 			--=== core ===--
-			dbgpu = true,
-			re = true, 
+			dbgpu = false,
+			re = false, 
 			uh = false,
 			eh = false,
-			GameObject = true,
-			RenderArea = true,
-			Sprite = true,
+			GameObject = false,
+			RenderArea = false,
+			Sprite = false,
 			
 			--=== data groups ===--
 			global = false, --global dir.
@@ -71,7 +71,7 @@ local nosGaConf = {
 			textures = false,
 			animations = false,
 			parents = false,
-			gameObjects = false,
+			gameObjects = true,
 			structuredGameObjects = false,
 			
 			mods = false, --just reloads the activated data groups of the mods (if only onReload.blocks = true he only also reloads the blocks from mods). should be always true.

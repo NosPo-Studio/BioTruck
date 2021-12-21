@@ -18,11 +18,12 @@
 ]]
 
 local global = ...
-global.gameVersion = "v0.0.13"
+global.gameVersion = "v0.0.14"
 
 --===== shared vars =====--
 local game = {
 	stats = global.stats,
+	
 	cameraOffsetX = 0,
 	cameraOffsetY = 23,
 	ui = {},
@@ -30,8 +31,13 @@ local game = {
 	maxDistance = 0,
 	lines = 3,
 	streetWidth = 9,
+
+	scoreTime,
+	scoreLastTime = 5,
 	
 	runIsRunning = true,
+
+	currentDriver = "DRIVERrrrrrrrrrrrrrrrrrrrrrrr",
 }
 
 --===== local vars =====--
@@ -159,12 +165,20 @@ function game.update(dt)
 	if game.goPlayer.life <= 0 and game.runIsRunning then
 		game.runIsRunning = false
 	elseif not game.runIsRunning and game.goPlayer:getSpeed() <= 0 and game.goScoreScreen == nil then
+		local distance = select(1, game.goPlayer:getPos())
+		local score = math.floor(game.goPlayer.moneyEarned * (distance / 100))
 		game.goScoreScreen = game.raMain:addGO("ScoreScreen", {
 			money = game.goPlayer.moneyEarned,
 			fuel = game.goPlayer.fuelEarned,
-			distance = select(1, game.goPlayer:getPos()),
+			score = score,
+
+			distance = distance,
 			uiHeight = 7,
 		})
+
+		game.scoreTime = global.computer.uptime()
+	elseif game.goScoreScreen ~= nil and global.computer.uptime() - game.scoreTime > game.scoreLastTime then
+		--global.changeState("mainMenu")
 	end
 	
 	--print("=====New frame=====")
@@ -192,7 +206,8 @@ function game.draw()
 	global.gpu.set(3, resY - 3, "Armor:")
 	global.gpu.set(global.resX / 2 + 3, resY - 3, "Life:")
 	
-	global.gpu.set(global.resX / 2 - 10, resY - 1, "Max distance: " .. tostring(game.maxDistance))
+	global.gpu.set(global.resX / 4 - 10, resY - 1, "Current distance: " .. tostring(game.maxDistance))
+	global.gpu.set(global.resX / 4 * 3 - 5 - global.unicode.len(tostring(game.currentDriver)) / 2, resY - 1, "Current driver: " .. tostring(game.currentDriver))
 	
 	game.ocui:draw()
 	
@@ -246,7 +261,7 @@ function game.ctrl_reset_key_down()
 end
 function game.ctrl_garage_key_down(s, sname)
 	if not game.runIsRunning then
-		global.changeState("garage")
+		--global.changeState("garage") --scraped
 	end
 end
 
